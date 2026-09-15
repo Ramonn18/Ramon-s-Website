@@ -75,5 +75,5 @@ Accessibility is a baseline, not a feature.[^1]
 
 ## 6. Preview and publish
 
-- Preview while writing: `npm run dev`, then open http://localhost:5173/Ramon-s-Website/blog
-- Publish: set `draft: false`, commit, and push to GitHub.
+- Preview while writing: `npm run dev`, then open http://localhost:5173/blog
+- Publish: set `draft: false`, commit, and push to GitHub. Netlify rebuilds the live site automatically in about a minute.
