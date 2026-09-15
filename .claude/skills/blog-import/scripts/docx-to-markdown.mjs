@@ -3,7 +3,7 @@
 //
 //   node docx-to-markdown.mjs <file.docx> [--media-out <dir>]
 //
-// - Headings, bold, italic, bullet lists and links are kept.
+// - Headings, bold, italic, bullet lists, links and tables are kept.
 // - Text boxes (e.g. a box containing "[sketch-01.jpeg]") become  [[BOX: ...]]
 // - Pictures pasted into the document become  [[EMBEDDED IMAGE: image1.png]]
 //   and are extracted to --media-out when given.
@@ -12,6 +12,7 @@
 import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
+import { markdownTable } from './table.mjs'
 
 const args = process.argv.slice(2)
 const file = args[0]
@@ -39,6 +40,7 @@ const decode = (text) =>
     .replace(/&quot;/g, '"')
     .replace(/&apos;/g, "'")
     .replace(/&amp;/g, '&')
+const escapeXml = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;')
 
 let xml = readEntry('word/document.xml')?.toString('utf8')
 if (!xml) {
@@ -51,7 +53,7 @@ const rels = Object.fromEntries(
   [...relsXml.matchAll(/<Relationship\b[^>]*>/g)].map(([tag]) => [attr(tag, 'Id'), attr(tag, 'Target')]),
 )
 
-// Plain text of a chunk of XML, one line per paragraph
+// Plain text of a chunk of XML, paragraphs joined with spaces
 const plainText = (chunk) =>
   [...chunk.matchAll(/<w:p\b[\s\S]*?<\/w:p>/g)]
     .map(([p]) => decode([...p.matchAll(/<w:t\b[^>]*>([^<]*)<\/w:t>/g)].map((m) => m[1]).join('')).trim())
@@ -64,19 +66,29 @@ xml = xml.replace(/<mc:Fallback>[\s\S]*?<\/mc:Fallback>/g, '')
 // Replace drawings and legacy shapes with marker text before reading paragraphs,
 // because text boxes contain paragraphs nested inside paragraphs.
 const embedded = []
-const markerRun = (text) => `<w:r><w:t>${text.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</w:t></w:r>`
+const markerRun = (text) => `<w:r><w:t>${escapeXml(text)}</w:t></w:r>`
 xml = xml.replace(/<w:drawing>[\s\S]*?<\/w:drawing>|<w:pict>[\s\S]*?<\/w:pict>/g, (block) => {
   const box = /<w:txbxContent>([\s\S]*?)<\/w:txbxContent>/.exec(block)
   if (box) return markerRun(`[[BOX: ${plainText(box[1])}]]`)
   const blip = /r:(?:embed|id)="([^"]+)"/.exec(block)
   const target = blip && rels[blip[1]]
   if (target && /media\//.test(target)) {
-    const name = path.basename(target)
     embedded.push(target)
-    return markerRun(`[[EMBEDDED IMAGE: ${name}]]`)
+    return markerRun(`[[EMBEDDED IMAGE: ${path.basename(target)}]]`)
   }
   return ''
 })
+
+// Tables hold paragraphs too: turn each (innermost first) into a Markdown table paragraph
+const innermostTable = /<w:tbl\b[^>]*>(?:(?!<w:tbl\b)[\s\S])*?<\/w:tbl>/
+while (innermostTable.test(xml)) {
+  xml = xml.replace(innermostTable, (table) => {
+    const rows = [...table.matchAll(/<w:tr\b[\s\S]*?<\/w:tr>/g)].map(([tr]) =>
+      [...tr.matchAll(/<w:tc\b[\s\S]*?<\/w:tc>/g)].map(([tc]) => plainText(tc)),
+    )
+    return `<w:p>${markerRun(`[[TABLE]]\n${markdownTable(rows)}`)}</w:p>`
+  })
+}
 
 const isOn = (rPr, tag) => {
   const match = new RegExp(`<w:${tag}(\\s[^>]*)?/>`).exec(rPr)
@@ -134,7 +146,8 @@ for (const [paragraph] of xml.matchAll(/<w:p\b[\s\S]*?<\/w:p>/g)) {
   if (!text) continue
 
   const heading = /^heading\s?(\d)$/i.exec(style)
-  if (/^title$/i.test(style)) blocks.push(`# ${text.replace(/\*\*/g, '')}`)
+  if (text.startsWith('[[TABLE]]')) blocks.push(text.replace('[[TABLE]]\n', ''))
+  else if (/^title$/i.test(style)) blocks.push(`# ${text.replace(/\*\*/g, '')}`)
   else if (heading) blocks.push(`${'#'.repeat(Math.min(Number(heading[1]) + 1, 4))} ${text.replace(/\*\*/g, '')}`)
   else if (/<w:numPr>/.test(pPr) || /^list/i.test(style)) blocks.push(`- ${text}`)
   else blocks.push(text)

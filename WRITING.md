@@ -73,11 +73,24 @@ Accessibility is a baseline, not a feature.[^1]
 [^1]: Kat Holmes, *Mismatch: How Inclusion Shapes Design*, 2018.
 ```
 
-## 6. Or import a Word document or PDF
+## 6. Tables and column maps
 
-Put the document and its images in a folder inside `blog-inbox/`, with each image's spot marked by its file name in brackets, like `[sketch-01.jpeg]`. Then ask Claude to import it. Details: `blog-inbox/README.md`.
+Write a table with pipes. The first row is the header:
 
-## 7. Preview and publish
+```md
+| Old field | New field | Type |
+| --- | --- | --- |
+| user_name | fullName | text |
+| zip_code | postalCode | text |
+```
+
+Wide tables scroll sideways on the page, so column maps with many columns are fine. To turn an Excel or Google Sheets file into a table, use the import in step 7.
+
+## 7. Or import a Word document, PDF or spreadsheet
+
+Put the document in a folder inside `blog-inbox/` together with its images and spreadsheets (.xlsx or .csv). Mark each spot with the file name in brackets, like `[sketch-01.jpeg]` or `[column-map.xlsx]`, then ask Claude to import it. Details: `blog-inbox/README.md`.
+
+## 8. Preview and publish
 
 - Preview while writing: `npm run dev`, then open http://localhost:5173/blog
 - Publish: set `draft: false`, commit, and push to GitHub. Netlify rebuilds the live site automatically in about a minute.

@@ -83,6 +83,13 @@ export default function Markdown({ slug, children }) {
           return <p>{content}</p>
         },
 
+        // Wide tables (column maps) scroll sideways instead of squeezing the page
+        table: ({ node: _node, ...props }) => (
+          <div className="table-scroll" role="region" aria-label="Table" tabIndex={0}>
+            <table {...props} />
+          </div>
+        ),
+
         img: ({ node: _node, src, alt, ...props }) => (
           <img {...props} src={assetUrl(slug, src)} alt={alt || ''} loading="lazy" />
         ),
