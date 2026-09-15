@@ -1,9 +1,11 @@
 // Loads every Markdown entry in src/posts at build time.
 // See WRITING.md for the front matter fields.
 
-const files = import.meta.glob('../posts/*.md', { query: '?raw', import: 'default', eager: true })
+// { 'entry-name.md': 'raw file text' }. Built by the blog-posts plugin in
+// vite.config.js, which leaves drafts out of production builds entirely.
+import files from 'virtual:blog-posts'
 
-// Drafts are visible while writing (npm run dev) and hidden on the live site
+// Drafts are visible while writing (npm run dev) and never reach the live site
 const showDrafts = import.meta.env.DEV
 
 const PHASE_ORDER = ['Research', 'Concept', 'Prototype', 'Critique']

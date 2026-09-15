@@ -3,7 +3,7 @@ title: Thesis Development-Gift Giving a Question
 date: 2026-09-14
 phase: Research
 summary: I want to make sure that smart home technology serves as a non-intrusive support system for my parents during their retirement.
-draft: true
+draft: false
 ---
 
 ## Reciprocity Map & Gift Object
