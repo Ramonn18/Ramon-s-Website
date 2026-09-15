@@ -1,14 +1,14 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { motion, useScroll, useTransform } from 'motion/react'
+import { motion, useMotionValueEvent, useScroll, useTransform } from 'motion/react'
 import SheetMarks from '../SheetMarks.jsx'
 import SiteHeader from '../SiteHeader.jsx'
 import Markdown from './Markdown.jsx'
 import { formatDate, getPost, posts } from './posts.js'
 import './blog.css'
 
-// Morse for "SCROLL", from the case-study frame's ink pill in Figma
-const MORSE_SCROLL = '... -.-. .-. --- .-.. .-..'
+// Progress starts when the article reaches this far from the top of the window
+const READING_START_OFFSET = 140
 
 function ArrowIcon({ direction = 'left' }) {
   return (
@@ -24,24 +24,66 @@ function ArrowIcon({ direction = 'left' }) {
   )
 }
 
-// The pill's arrow travels down as you read
-function ReadingCue() {
-  const { scrollYProgress } = useScroll()
-  const arrowTop = useTransform(scrollYProgress, [0, 1], ['220px', '410px'])
+// START → END rail beside the entry: fills as you read, with a tick at each
+// section heading. On narrow screens it becomes a bar across the top.
+function ReadingProgress({ articleRef }) {
+  const { scrollYProgress } = useScroll({
+    target: articleRef,
+    offset: [`start ${READING_START_OFFSET}px`, 'end end'],
+  })
+  const markerTop = useTransform(scrollYProgress, (value) => `${value * 100}%`)
+  const [ticks, setTicks] = useState([])
+  const [progress, setProgress] = useState(0)
+
+  useMotionValueEvent(scrollYProgress, 'change', (value) => setProgress(Math.round(value * 200) / 200))
+
+  // Where each heading sits along the rail, in the same 0–1 range as the scroll progress
+  useEffect(() => {
+    const article = articleRef.current
+    if (!article) return
+
+    const measure = () => {
+      const articleTop = article.getBoundingClientRect().top + window.scrollY
+      const range = Math.max(1, article.offsetHeight - window.innerHeight + READING_START_OFFSET)
+      const headings = article.querySelectorAll('.entry__body h2, .entry__body h3')
+      setTicks(
+        [...headings].map((heading, index) => ({
+          id: index,
+          at: Math.min(1, Math.max(0, (heading.getBoundingClientRect().top + window.scrollY - articleTop) / range)),
+        })),
+      )
+    }
+
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(article)
+    window.addEventListener('resize', measure)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', measure)
+    }
+  }, [articleRef])
 
   return (
-    <div className="reading-cue" aria-hidden="true">
-      <span className="reading-cue__morse">{MORSE_SCROLL}</span>
-      <motion.svg
-        className="reading-cue__arrow"
-        style={{ top: arrowTop }}
-        width="8"
-        height="17"
-        viewBox="0 0 8 17"
-      >
-        <path d="M4 0v15.5M1 12.5l3 3.5 3-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      </motion.svg>
-    </div>
+    <>
+      <div className="reading-progress" aria-hidden="true">
+        <span className="reading-progress__label">START</span>
+        <div className="reading-progress__rail">
+          <motion.span className="reading-progress__fill" style={{ scaleY: scrollYProgress }} />
+          {ticks.map((tick) => (
+            <span
+              key={tick.id}
+              className="reading-progress__tick"
+              data-passed={progress >= tick.at || undefined}
+              style={{ top: `${tick.at * 100}%` }}
+            />
+          ))}
+          <motion.span className="reading-progress__marker" style={{ top: markerTop }} />
+        </div>
+        <span className="reading-progress__label">END</span>
+      </div>
+      <motion.div className="reading-progress-bar" style={{ scaleX: scrollYProgress }} aria-hidden="true" />
+    </>
   )
 }
 
@@ -66,6 +108,7 @@ function NotFound() {
 export default function BlogPost() {
   const { slug } = useParams()
   const post = getPost(slug)
+  const articleRef = useRef(null)
 
   useEffect(() => {
     document.title = post ? `${post.title} — Ramon Naula` : 'Entry not found — Ramon Naula'
@@ -92,8 +135,8 @@ export default function BlogPost() {
             <ArrowIcon /> All entries
           </Link>
 
-          <article className="entry">
-            <ReadingCue />
+          <article className="entry" ref={articleRef}>
+            <ReadingProgress articleRef={articleRef} />
 
             <header className="entry__header">
               <hr className="entry__rule" />
