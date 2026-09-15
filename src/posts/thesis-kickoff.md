@@ -1,8 +1,8 @@
 ---
 title: Thesis kickoff
 date: 2026-09-14
-phase: Research
-summary: "[One or two sentences on what this entry covers.]"
+phase: Thinking more Thinking and Research
+summary: "[This is the start of my Thesis]"
 draft: true
 ---
 
