@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Raw documents for blog imports stay local (the finished entry and images are committed)
+blog-inbox/*
+!blog-inbox/README.md
+
 # Machine-local tool state
 .claude/settings.local.json
 .impeccable/config.local.json

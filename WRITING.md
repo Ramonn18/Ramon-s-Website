@@ -73,7 +73,11 @@ Accessibility is a baseline, not a feature.[^1]
 [^1]: Kat Holmes, *Mismatch: How Inclusion Shapes Design*, 2018.
 ```
 
-## 6. Preview and publish
+## 6. Or import a Word document or PDF
+
+Put the document and its images in a folder inside `blog-inbox/`, with each image's spot marked by its file name in brackets, like `[sketch-01.jpeg]`. Then ask Claude to import it. Details: `blog-inbox/README.md`.
+
+## 7. Preview and publish
 
 - Preview while writing: `npm run dev`, then open http://localhost:5173/blog
 - Publish: set `draft: false`, commit, and push to GitHub. Netlify rebuilds the live site automatically in about a minute.
