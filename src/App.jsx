@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
 import { MotionConfig, motion, useReducedMotion } from 'motion/react'
 import monogram from './assets/monogram.svg'
 import loadingAnimation from './assets/loading.gif'
+import { NAV_LEFT, NAV_RIGHT } from './nav.js'
 import './App.css'
 
 // Timings and curves from the Figma prototype ("Refined Prototype" page)
@@ -10,17 +12,11 @@ const INTRO = { duration: 0.6, ease: [0, 0, 0.58, 1] }
 const REVEAL = { type: 'spring', mass: 1, stiffness: 80, damping: 20 }
 const INSTANT = { duration: 0 }
 
-const NAV_LEFT = [
-  { label: 'Ux/Ui projects', href: '#ux-ui-projects' },
-  { label: 'Design', href: '#design' },
-]
-
-const NAV_RIGHT = [
-  { label: 'About me', href: '#about' },
-  { label: 'Contact me', href: '#contact' },
-]
-
 const CORNERS = ['tl', 'tr', 'bl', 'br']
+
+// Remembered for this page load only: coming back from another page skips
+// the intro and shows the open menu, while a refresh replays it.
+let introPlayed = false
 
 function MetaRow({ position, collapsed }) {
   return (
@@ -48,15 +44,15 @@ function NavGroup({ items, side, open }) {
     <ul className={`nav nav--${side}`} data-collapsed={open ? undefined : true}>
       {items.map((item) => (
         <motion.li
-          key={item.href}
+          key={item.to}
           layout
           className="nav__item"
           initial={false}
           animate={{ opacity: open ? 1 : 0 }}
         >
-          <a className="nav__link" href={item.href} tabIndex={open ? undefined : -1}>
+          <Link className="nav__link" to={item.to} tabIndex={open ? undefined : -1}>
             {item.label}
-          </a>
+          </Link>
         </motion.li>
       ))}
     </ul>
@@ -65,11 +61,18 @@ function NavGroup({ items, side, open }) {
 
 export default function App() {
   const reduceMotion = useReducedMotion()
-  const [phase, setPhase] = useState('loading') // loading → intro ⇄ open
-  const [hasToggled, setHasToggled] = useState(false)
+  const [phase, setPhase] = useState(() => (introPlayed ? 'open' : 'loading')) // loading → intro ⇄ open
+  const [hasToggled, setHasToggled] = useState(introPlayed)
 
   useEffect(() => {
-    if (phase !== 'loading') return
+    document.title = 'Ramon Naula'
+  }, [])
+
+  useEffect(() => {
+    if (phase !== 'loading') {
+      introPlayed = true
+      return
+    }
     const timer = setTimeout(() => setPhase('intro'), reduceMotion ? 0 : LOADING_MS)
     return () => clearTimeout(timer)
   }, [phase, reduceMotion])

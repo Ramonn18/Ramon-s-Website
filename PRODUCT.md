@@ -27,6 +27,7 @@ Undecided. Not yet stated by the user.
 - The site is interactive; animation and motion are expected.
 - Pages are designed in Figma first (file "Ramon's website", key `KioVKyRwqwoKVVl5lSGULD`). The Home landing page is frame `79:125`.
 - Hosted on GitHub Pages, so it's a static build with no server.
+- Blog: a thesis process log. Ramon writes each entry himself as a Markdown file in `src/posts/`. Entries are dated, numbered, tagged with a thesis phase (Research, Concept, Prototype, Critique), and can be filtered by phase. They can include writing, images and sketches, sources, and Figma or video embeds. Drafts are hidden on the live site.
 
 ## Brand Commitments
 
