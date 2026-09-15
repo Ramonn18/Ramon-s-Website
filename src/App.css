@@ -1,184 +1,246 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+/*
+  Home screen, built from the Figma section
+  "Section: Home Screen (Animation — Starting Point)" (1440 × 900 frames).
+  Pixel values below are the frame's measurements.
+*/
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-}
-
-.hero {
+.stage {
   position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--cream);
 }
 
-#center {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+/* Loading animation (dark frame) */
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(732px, 90vmin);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  pointer-events: none;
 }
 
-#next-steps {
-  display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+/* Corner crosshairs */
+.crosshair {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
 }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+.crosshair::before,
+.crosshair::after {
+  content: '';
+  position: absolute;
+  background: var(--line);
 }
 
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+.crosshair::before {
+  top: 0;
+  left: 31.5px;
+  width: 1px;
+  height: 100%;
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
-  position: relative;
+.crosshair::after {
+  top: 31.5px;
+  left: 0;
   width: 100%;
+  height: 1px;
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
+.crosshair--tl { top: 49px; left: 53px; }
+.crosshair--tr { top: 49px; right: 53px; }
+.crosshair--bl { bottom: 44px; left: 53px; }
+.crosshair--br { bottom: 44px; right: 53px; }
+
+.crosshair[data-collapsed] {
+  top: calc(50% - 32px);
+  right: auto;
+  bottom: auto;
+  left: calc(50% - 32px);
+}
+
+/* Print-sheet labels; the bottom row is the top row rotated 180° */
+.meta {
+  position: absolute;
+  left: 99px;
+  right: 99px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin: 0;
+  font-size: 10px;
+  line-height: 10px;
+  color: var(--line);
+  white-space: pre;
+  pointer-events: none;
+}
+
+.meta--top { top: 59px; }
+.meta--bottom { bottom: 54px; }
+
+.meta__start { justify-self: start; }
+.meta__end {
+  display: flex;
+  gap: 60px;
+  justify-self: end;
+}
+
+.meta[data-collapsed] {
+  top: calc(50% - 5px);
+  bottom: auto;
+  left: calc(50% - 60px);
+  right: calc(50% - 60px);
+}
+
+/* Monogram + navigation */
+.hub {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.nav {
+  display: flex;
+  gap: 50px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav--left {
+  justify-self: end;
+  margin-right: 78px;
+}
+
+.nav--right {
+  justify-self: start;
+  margin-left: 100px;
+}
+
+.nav[data-collapsed] {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.nav[data-collapsed] .nav__item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+}
+
+.nav__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 117px;
+  height: 30px;
+  padding: 0 22.5px;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 0.3s var(--ease-out),
+    color 0.3s var(--ease-out);
+}
+
+.nav__link:hover,
+.nav__link:focus-visible {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.mark {
+  /* Sits above the nav, as in Figma, so links slide out from behind it */
+  position: relative;
+  z-index: 1;
+  grid-column: 2;
+  display: block;
+  width: 312px;
+  aspect-ratio: 312 / 322;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+}
+
+.mark:disabled {
+  cursor: default;
+}
+
+.mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Tablet and phone: stack the nav above and below the monogram */
+@media (max-width: 860px) {
+  .crosshair {
+    width: 40px;
+    height: 40px;
   }
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
+  .crosshair::before { left: 19.5px; }
+  .crosshair::after { top: 19.5px; }
+
+  .crosshair--tl { top: 16px; left: 16px; }
+  .crosshair--tr { top: 16px; right: 16px; }
+  .crosshair--bl { bottom: 16px; left: 16px; }
+  .crosshair--br { bottom: 16px; right: 16px; }
+
+  .crosshair[data-collapsed] {
+    top: calc(50% - 20px);
+    left: calc(50% - 20px);
   }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+
+  .meta {
+    left: 64px;
+    right: 64px;
+  }
+
+  .meta--top { top: 31px; }
+  .meta--bottom { bottom: 31px; }
+  .meta__end { gap: 16px; }
+
+  .hub {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto 1fr;
+    justify-items: center;
+    row-gap: 32px;
+    padding-block: 96px;
+  }
+
+  .nav {
+    gap: 8px;
+  }
+
+  .nav--left {
+    align-self: end;
+    justify-self: center;
+    margin: 0;
+  }
+
+  .nav--right {
+    align-self: start;
+    justify-self: center;
+    margin: 0;
+  }
+
+  .mark {
+    grid-column: auto;
+    width: clamp(160px, 48vw, 312px);
   }
 }

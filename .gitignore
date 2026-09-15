@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Machine-local tool state
+.claude/settings.local.json
+.impeccable/config.local.json
+.playwright-cli/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
