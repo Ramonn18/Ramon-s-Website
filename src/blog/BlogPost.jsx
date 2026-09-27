@@ -11,16 +11,23 @@ import './blog.css'
 // Progress starts when the article reaches this far from the top of the window
 const READING_START_OFFSET = 140
 
-function ArrowIcon({ direction = 'left' }) {
+// Figma draws this as a 21px line with an ARROW_LINES cap — an open V head.
+// `length` stretches the shaft without changing the head.
+function ArrowIcon({ direction = 'left', length = 16 }) {
   return (
     <svg
       className={`arrow-icon arrow-icon--${direction}`}
-      width="16"
+      width={length}
       height="10"
-      viewBox="0 0 16 10"
+      viewBox={`0 0 ${length} 10`}
       aria-hidden="true"
     >
-      <path d="M15 5H1M5 1L1 5l4 4" fill="none" stroke="currentColor" strokeWidth="1" />
+      <path
+        d={`M${length - 1} 5H1M5 1L1 5l4 4`}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+      />
     </svg>
   )
 }
@@ -104,7 +111,7 @@ function NotFound() {
           <h1 className="entry__title">Entry not found</h1>
           <p>This entry doesn&apos;t exist, or it hasn&apos;t been published yet.</p>
           <Link className="text-link" to="/blog">
-            All Entries
+            <ArrowIcon length={21} /> All entries
           </Link>
         </main>
         <SiteFooter />
@@ -127,7 +134,6 @@ export default function BlogPost() {
   const index = posts.indexOf(post)
   const newer = posts[index - 1]
   const older = posts[index + 1]
-  const total = String(posts.length).padStart(2, '0')
 
   return (
     <div className="sheet">
@@ -139,12 +145,8 @@ export default function BlogPost() {
         <main>
           <article className="entry" ref={articleRef}>
             <Link className="text-link entry__back" to="/blog">
-              All Entries
+              <ArrowIcon length={21} /> Previous Blog
             </Link>
-
-            <p className="entry__counter">
-              {post.number}/{total}
-            </p>
 
             <ReadingProgress articleRef={articleRef} />
 

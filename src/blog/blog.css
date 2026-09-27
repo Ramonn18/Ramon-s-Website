@@ -168,17 +168,10 @@
 .text-link {
   display: inline-flex;
   align-items: center;
-  gap: 10px; /* 21px rule + 10 gap before "All Entries" */
+  gap: 10px; /* 21px arrow + 10 gap before the label */
   font: var(--type-ui);
   color: var(--ink);
   text-decoration: none;
-}
-
-.text-link::before {
-  content: '';
-  width: 21px;
-  height: 1px;
-  background: var(--line);
 }
 
 .text-link:hover {
@@ -213,20 +206,20 @@
   white-space: nowrap;
 }
 
-.entry__counter {
-  grid-row: 1;
+/* Placed explicitly: with row 1 holding only the back link, auto-placement
+   would pull the header into the spare column-2 cell beside it. */
+.entry__header {
+  grid-row: 2;
   grid-column: 2;
-  margin: 0;
-  font: var(--type-number); /* "01/03" at 30px, y 161 */
 }
 
-.entry__header,
 .entry__body {
+  grid-row: 3;
   grid-column: 2;
 }
 
 .entry__title {
-  margin: clamp(16px, 1.94vw, 28px) 0 0; /* 219 − 191 */
+  margin: clamp(24px, 3.06vw, 44px) 0 0; /* 219 − 175, below the back link */
   font: var(--type-title); /* 70 Semi Bold */
   text-wrap: balance;
 }
@@ -573,14 +566,9 @@
     margin-bottom: 32px;
   }
 
-  .entry__counter,
   .entry__header,
   .entry__body {
     grid-column: 1;
-  }
-
-  .entry__counter {
-    grid-row: 2;
   }
 
   .reading-progress {
