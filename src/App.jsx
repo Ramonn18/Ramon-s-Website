@@ -30,7 +30,34 @@ const CORNERS = ['tl', 'tr', 'bl', 'br']
 // the intro and shows the open menu, while a refresh replays it.
 let introPlayed = false
 
-function MetaRow({ position, collapsed }) {
+// The sheet's edge labels describe the window they are being read in, so they
+// track the viewport rather than quoting the 1440 x 900 Figma frame.
+// Resize fires continuously, so updates are coalesced to one a frame.
+function useViewportLabels() {
+  const read = () => ({ w: Math.round(window.innerWidth), h: Math.round(window.innerHeight) })
+  const [{ w, h }, setSize] = useState(read)
+
+  useEffect(() => {
+    let frame = 0
+    const onResize = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => setSize(read()))
+    }
+    window.addEventListener('resize', onResize)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [])
+
+  return {
+    // Landscape reads "1.78:1", portrait flips to "1:1.78" rather than "0.56:1"
+    ratio: w >= h ? `${(w / h).toFixed(2)}:1` : `1:${(h / w).toFixed(2)}`,
+    size: `${w} × ${h}`,
+  }
+}
+
+function MetaRow({ position, collapsed, ratio, size }) {
   return (
     <motion.p
       layout
@@ -44,8 +71,8 @@ function MetaRow({ position, collapsed }) {
       <motion.span layout className="meta__start">RAMON NOIR</motion.span>
       <motion.span layout>WEB PAGE</motion.span>
       <motion.span layout className="meta__end">
-        <span>1.78:1</span>
-        <span>{'16”  ×   9”'}</span>
+        <span>{ratio}</span>
+        <span>{size}</span>
       </motion.span>
     </motion.p>
   )
@@ -74,6 +101,7 @@ function NavGroup({ items, side, open, transition }) {
 
 export default function App() {
   const reduceMotion = useReducedMotion()
+  const { ratio, size } = useViewportLabels()
   const [phase, setPhase] = useState(() => (introPlayed ? 'open' : 'loading')) // loading → intro ⇄ open
   const [hasToggled, setHasToggled] = useState(introPlayed)
 
@@ -127,8 +155,8 @@ export default function App() {
           />
         ))}
 
-        <MetaRow position="top" collapsed={loading} />
-        <MetaRow position="bottom" collapsed={loading} />
+        <MetaRow position="top" collapsed={loading} ratio={ratio} size={size} />
+        <MetaRow position="bottom" collapsed={loading} ratio={ratio} size={size} />
 
         <nav className="hub" aria-label="Main">
           <NavGroup items={NAV_LEFT} side="left" open={open} transition={transition} />

@@ -84,6 +84,9 @@
   column-gap: 16px;
   margin: 0;
   font: var(--type-label);
+  /* Home's labels count the live viewport; equal-width digits stop them
+     twitching as the numbers change during a resize */
+  font-variant-numeric: tabular-nums;
   color: var(--line);
   white-space: pre;
   pointer-events: none;
