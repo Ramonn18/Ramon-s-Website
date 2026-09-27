@@ -130,19 +130,25 @@
     gap: 8px;
   }
 
+  /* Rows are pinned rather than auto-placed: while the menu is closed both
+     lists are absolute and out of flow, which would leave the monogram as the
+     only in-flow item and drop it into row 1 — the top third of the screen. */
   .nav--left {
+    grid-row: 1;
     align-self: end;
     justify-self: center;
     margin: 0;
   }
 
   .nav--right {
+    grid-row: 3;
     align-self: start;
     justify-self: center;
     margin: 0;
   }
 
   .mark {
+    grid-row: 2;
     grid-column: auto;
     width: clamp(160px, 48vw, 312px);
   }
