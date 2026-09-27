@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import SheetMarks from '../SheetMarks.jsx'
 import SiteHeader from '../SiteHeader.jsx'
+import SiteFooter from '../SiteFooter.jsx'
 import { formatDate, phases, posts } from './posts.js'
 import './blog.css'
 
@@ -12,7 +13,6 @@ export default function BlogIndex() {
   const reduceMotion = useReducedMotion()
   const [phase, setPhase] = useState(ALL)
   const visible = phase === ALL ? posts : posts.filter((post) => post.phase === phase)
-  const count = `${posts.length} ${posts.length === 1 ? 'ENTRY' : 'ENTRIES'}`
 
   useEffect(() => {
     document.title = 'Blog — Ramon Naula'
@@ -20,7 +20,7 @@ export default function BlogIndex() {
 
   return (
     <div className="sheet">
-      <SheetMarks label="BLOG" details={[count]} />
+      <SheetMarks detail={`Entries ${posts.length}`} />
 
       <div className="page">
         <SiteHeader />
@@ -29,8 +29,8 @@ export default function BlogIndex() {
           <section className="blog-intro">
             <h1 className="blog-intro__title">Blog</h1>
             <p className="blog-intro__lead">
-              A process log documenting my thesis, entry by entry: research, concepts, prototypes and
-              critiques.
+              A process log documenting my thesis, entry by entry: research, concepts, frustrations,
+              prototypes and critiques.
             </p>
           </section>
 
@@ -71,7 +71,11 @@ export default function BlogIndex() {
                           {formatDate(post.date)}
                         </time>
                         <span className="entry-row__title">{post.title}</span>
-                        {post.summary && <span className="entry-row__summary">{post.summary}</span>}
+                        {post.summary && (
+                          <span className="entry-row__summary">
+                            <span>{post.summary}</span>
+                          </span>
+                        )}
                       </span>
                       <span className="entry-row__tags">
                         {post.phase && <span className="pill">{post.phase}</span>}
@@ -84,6 +88,8 @@ export default function BlogIndex() {
             </ul>
           )}
         </main>
+
+        <SiteFooter />
       </div>
     </div>
   )

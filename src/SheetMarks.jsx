@@ -1,7 +1,9 @@
 const CORNERS = ['tl', 'tr', 'bl', 'br']
 
-// Static crosshairs and edge labels for pages inside a `.sheet`
-export default function SheetMarks({ label, details = [] }) {
+// Static crosshairs and edge labels for pages inside a `.sheet`.
+// Figma draws two labels per edge — "RAMON N." and a page detail — and the
+// bottom row is the top row rotated 180°, so they land on opposite corners.
+export default function SheetMarks({ detail }) {
   return (
     <>
       {CORNERS.map((corner) => (
@@ -14,13 +16,8 @@ export default function SheetMarks({ label, details = [] }) {
           style={position === 'bottom' ? { transform: 'rotate(180deg)' } : undefined}
           aria-hidden="true"
         >
-          <span className="meta__start">RAMON NOIR</span>
-          <span>{label}</span>
-          <span className="meta__end">
-            {details.map((detail) => (
-              <span key={detail}>{detail}</span>
-            ))}
-          </span>
+          <span className="meta__start">RAMON N.</span>
+          <span className="meta__end">{detail}</span>
         </p>
       ))}
     </>

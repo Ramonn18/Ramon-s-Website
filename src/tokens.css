@@ -1,0 +1,99 @@
+/*
+  DESIGN FOUNDATION
+  =================
+  Every value here is a measurement taken from the Figma file "Ramon's website",
+  page "Refined Prototype" (frames: Home screen, Blog Parent Page, Blog Child Page).
+  The reference frame is 1440 × 1167.
+
+  Pages should consume these tokens and not restate raw pixel values, so that
+  the Ux/Ui projects, Design and About pages inherit the same system for free.
+
+  Fluid sizes are written as clamp(min, <figma px ÷ 1440>vw, figma px): they hit
+  the Figma number exactly at 1440 and shrink proportionally below it.
+*/
+
+:root {
+  /* ---------- Color ---------- */
+  --cream: #e8e8e1; /* sheet background */
+  --ink: #1a1a1a; /* text and filled buttons */
+  --white: #ffffff; /* text on ink */
+  --placeholder: #d9d9d9; /* image placeholder blocks */
+  --line: #000000; /* crosshairs, rules, edge labels */
+
+  /* Derived tints, for the parts of a rule that read as "not yet reached" */
+  --line-quiet: color-mix(in srgb, var(--line) 25%, transparent);
+  --line-soft: color-mix(in srgb, var(--line) 35%, transparent);
+
+  /* ---------- Sheet geometry ---------- */
+  --sheet-width: 1440px;
+  --gutter: clamp(20px, 3.68vw, 53px); /* 53 — page edge to content */
+  --crosshair-size: clamp(40px, 4.44vw, 64px); /* 64 */
+  --crosshair-inset: clamp(16px, 3.4vw, 49px); /* 49 — top/bottom */
+  /* 99 − 53. The floor keeps the label clear of the crosshair's vertical
+     stroke once the crosshair stops shrinking. */
+  --label-indent: clamp(32px, 3.19vw, 46px);
+  --label-baseline: clamp(20px, 4.24vw, 61px); /* 61 — edge label row */
+
+  /* Content widths */
+  --content-max: 1334px; /* index entry rows */
+  --measure: 1115px; /* entry text column */
+  --measure-intro: 699px; /* index lead paragraph */
+
+  /* Figma runs body copy the full 1115 of the column, which is about 105
+     characters a line — long for sustained reading. Narrow this one token
+     (e.g. 72ch) to tighten every entry at once. */
+  --measure-text: var(--measure);
+
+  /* Entry page reading rail: 33 wide, 57 clear of the text column,
+     inside a 146 column (199 − 53) */
+  --rail-column: clamp(0px, 10.14vw, 146px);
+  --rail-width: 33px;
+  --rail-gap: clamp(16px, 3.96vw, 57px);
+
+  /* ---------- Type ---------- */
+  --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Tracking — the design puts 5% on body and meta copy, 0 on display and UI */
+  --track: 0.05em;
+
+  /* font: <style> <weight> <size>/<line-height> <family> */
+  --type-hero: 900 clamp(64px, 29.44vw, 424px) / 1 var(--font-sans); /* 424 Black */
+  --type-title: 600 clamp(34px, 4.86vw, 70px) / 1 var(--font-sans); /* 70 Semi Bold */
+  --type-h2: 600 clamp(26px, 2.78vw, 40px) / 1.25 var(--font-sans); /* 40/50 */
+  --type-h3: 600 clamp(19px, 1.53vw, 22px) / 1.36 var(--font-sans); /* 22/30 */
+  --type-row-title: 600 clamp(24px, 2.78vw, 40px) / 1 var(--font-sans); /* 40 */
+  --type-lede: italic 500 clamp(19px, 1.6vw, 23px) / 1.61 var(--font-sans); /* 23/37 */
+  --type-intro: 400 clamp(18px, 1.53vw, 22px) / 1.5 var(--font-sans); /* 22/33 */
+  --type-body: 400 clamp(16px, 1.25vw, 18px) / 1.556 var(--font-sans); /* 18/28 */
+  --type-summary: 400 clamp(15px, 1.18vw, 17px) / 1.47 var(--font-sans); /* 17/25 */
+  --type-meta: 400 15px / 1.6 var(--font-sans); /* 15/24, uppercase */
+  --type-number: 400 clamp(22px, 2.08vw, 30px) / 1 var(--font-sans); /* 30 */
+  --type-ui: 400 14px / 1 var(--font-sans); /* buttons, pills, links */
+  --type-label: 400 10px / 1 var(--font-sans); /* sheet edge labels */
+
+  /* ---------- Components ---------- */
+  --button-height: 30px;
+  --button-radius: 5px; /* nav buttons */
+  --button-pad: 22.5px;
+  --pill-radius: 25px; /* tag pills */
+  --pill-pad: 20px;
+  --pill-gap: 22px; /* 1175 − (1039 + 114) */
+  --row-height: 139px; /* entry row */
+  --row-number-column: 73px;
+
+  /* ---------- Motion ---------- */
+  /* Figma prototype curve: CUSTOM_CUBIC (0, 0, 0.58, 1) */
+  --ease-out: cubic-bezier(0, 0, 0.58, 1);
+  --speed: 0.3s; /* button and pill state changes */
+  --speed-slow: 0.6s; /* row hover reveal */
+}
+
+@media (max-width: 860px) {
+  :root {
+    /* The rail becomes a bar across the top, so its column collapses */
+    --rail-column: 0px;
+    --rail-gap: 0px;
+    --row-height: auto;
+  }
+}

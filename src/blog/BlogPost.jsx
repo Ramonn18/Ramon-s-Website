@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { motion, useMotionValueEvent, useScroll, useTransform } from 'motion/react'
+import { motion, useScroll, useTransform } from 'motion/react'
 import SheetMarks from '../SheetMarks.jsx'
 import SiteHeader from '../SiteHeader.jsx'
+import SiteFooter from '../SiteFooter.jsx'
 import Markdown from './Markdown.jsx'
 import { formatDate, getPost, posts } from './posts.js'
 import './blog.css'
@@ -24,8 +25,8 @@ function ArrowIcon({ direction = 'left' }) {
   )
 }
 
-// START → END rail beside the entry: fills as you read, with a tick at each
-// section heading. On narrow screens it becomes a bar across the top.
+// Start → End rail beside the entry: a 1px track that a 2px line fills as you
+// read, with a 17px tick at each section heading. Becomes a top bar on phones.
 function ReadingProgress({ articleRef }) {
   const { scrollYProgress } = useScroll({
     target: articleRef,
@@ -33,11 +34,8 @@ function ReadingProgress({ articleRef }) {
   })
   const markerTop = useTransform(scrollYProgress, (value) => `${value * 100}%`)
   const [ticks, setTicks] = useState([])
-  const [progress, setProgress] = useState(0)
 
-  useMotionValueEvent(scrollYProgress, 'change', (value) => setProgress(Math.round(value * 200) / 200))
-
-  // Where each heading sits along the rail, in the same 0–1 range as the scroll progress
+  // Where each heading sits along the rail, in the same 0–1 range as the scroll
   useEffect(() => {
     const article = articleRef.current
     if (!article) return
@@ -49,7 +47,13 @@ function ReadingProgress({ articleRef }) {
       setTicks(
         [...headings].map((heading, index) => ({
           id: index,
-          at: Math.min(1, Math.max(0, (heading.getBoundingClientRect().top + window.scrollY - articleTop) / range)),
+          at: Math.min(
+            1,
+            Math.max(
+              0,
+              (heading.getBoundingClientRect().top + window.scrollY - articleTop) / range,
+            ),
+          ),
         })),
       )
     }
@@ -67,22 +71,25 @@ function ReadingProgress({ articleRef }) {
   return (
     <>
       <div className="reading-progress" aria-hidden="true">
-        <span className="reading-progress__label">START</span>
+        <span className="reading-progress__label">Start</span>
         <div className="reading-progress__rail">
           <motion.span className="reading-progress__fill" style={{ scaleY: scrollYProgress }} />
           {ticks.map((tick) => (
             <span
               key={tick.id}
               className="reading-progress__tick"
-              data-passed={progress >= tick.at || undefined}
               style={{ top: `${tick.at * 100}%` }}
             />
           ))}
           <motion.span className="reading-progress__marker" style={{ top: markerTop }} />
         </div>
-        <span className="reading-progress__label">END</span>
+        <span className="reading-progress__label">End</span>
       </div>
-      <motion.div className="reading-progress-bar" style={{ scaleX: scrollYProgress }} aria-hidden="true" />
+      <motion.div
+        className="reading-progress-bar"
+        style={{ scaleX: scrollYProgress }}
+        aria-hidden="true"
+      />
     </>
   )
 }
@@ -90,16 +97,17 @@ function ReadingProgress({ articleRef }) {
 function NotFound() {
   return (
     <div className="sheet">
-      <SheetMarks label="BLOG" details={['404']} />
+      <SheetMarks detail="Not found" />
       <div className="page">
         <SiteHeader />
         <main className="entry-missing">
           <h1 className="entry__title">Entry not found</h1>
           <p>This entry doesn&apos;t exist, or it hasn&apos;t been published yet.</p>
           <Link className="text-link" to="/blog">
-            <ArrowIcon /> All entries
+            All Entries
           </Link>
         </main>
+        <SiteFooter />
       </div>
     </div>
   )
@@ -119,36 +127,38 @@ export default function BlogPost() {
   const index = posts.indexOf(post)
   const newer = posts[index - 1]
   const older = posts[index + 1]
+  const total = String(posts.length).padStart(2, '0')
 
   return (
     <div className="sheet">
-      <SheetMarks
-        label={`ENTRY ${post.number}`}
-        details={post.phase ? [post.phase.toUpperCase()] : []}
-      />
+      <SheetMarks detail={`Entry ${post.number}`} />
 
       <div className="page">
         <SiteHeader />
 
         <main>
-          <Link className="text-link entry__back" to="/blog">
-            <ArrowIcon /> All entries
-          </Link>
-
           <article className="entry" ref={articleRef}>
+            <Link className="text-link entry__back" to="/blog">
+              All Entries
+            </Link>
+
+            <p className="entry__counter">
+              {post.number}/{total}
+            </p>
+
             <ReadingProgress articleRef={articleRef} />
 
             <header className="entry__header">
-              <hr className="entry__rule" />
+              <h1 className="entry__title">{post.title}</h1>
+
               <div className="entry__tags">
-                <span className="pill">Entry {post.number}</span>
                 {post.phase && <span className="pill">{post.phase}</span>}
                 <time className="pill" dateTime={post.date}>
                   {formatDate(post.date)}
                 </time>
                 {post.draft && <span className="pill pill--draft">Draft · not on the live site</span>}
               </div>
-              <h1 className="entry__title">{post.title}</h1>
+
               {post.summary && <p className="entry__summary">{post.summary}</p>}
             </header>
 
@@ -180,6 +190,8 @@ export default function BlogPost() {
             </nav>
           )}
         </main>
+
+        <SiteFooter />
       </div>
     </div>
   )

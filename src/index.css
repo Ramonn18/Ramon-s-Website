@@ -1,15 +1,7 @@
-/* Tokens from the Figma "Style Guide — Color Palette" */
+/* Design tokens live in tokens.css — every page builds on those. */
+@import './tokens.css';
+
 :root {
-  --cream: #e8e8e1;
-  --ink: #1a1a1a;
-  --white: #ffffff;
-  --neutral-gray: #d9d9d9;
-  --line: #000000;
-
-  --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;
-  /* Figma prototype curve: CUSTOM_CUBIC (0, 0, 0.58, 1) */
-  --ease-out: cubic-bezier(0, 0, 0.58, 1);
-
   color-scheme: light;
   font-family: var(--font-sans);
   color: var(--ink);

@@ -1,68 +1,37 @@
 /*
-  Blog, inside the Home print-sheet world.
-  Row styling follows the Figma "Hovers" project rows; entry typography
-  follows the case-study frame (40/50 Semi Bold title, 15/24 body, 5% tracking).
+  Blog, built to the Figma "Refined Prototype" frames
+  "Blog Parent Page" and "Blog Child Page" (1440 × 1167).
+
+  Pixel comments name the Figma coordinate a value comes from.
+  Everything else is a token from tokens.css.
 */
 
 .page {
   width: 100%;
-  max-width: calc(1242px + 2 * clamp(24px, 6.875vw, 99px));
+  max-width: calc(var(--content-max) + 2 * var(--gutter)); /* 1334 + 2 × 53 */
   margin: 0 auto;
-  padding: 140px clamp(24px, 6.875vw, 99px) 180px;
+  padding: clamp(20px, 2.08vw, 30px) var(--gutter) 0; /* monogram sits at y 30 */
 }
 
-/* Header */
-.site-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 96px;
-}
-
-.site-header__home {
-  display: block;
-  width: 56px;
-  border-radius: 4px;
-}
-
-.site-header__home img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.site-header__nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-/* Pills (Figma: 1px ink outline, 25px radius, 20/10 padding, 14px) */
+/* ---------- Tag pill (1px outline, 25 radius, 20 padding, 14px) ---------- */
 .pill {
   display: inline-flex;
   align-items: center;
-  height: 30px;
-  padding: 0 20px;
-  border: 1px solid var(--ink);
-  border-radius: 25px;
-  font-size: 14px;
-  line-height: 1;
+  height: var(--button-height);
+  padding: 0 var(--pill-pad);
+  border: 1px solid var(--line);
+  border-radius: var(--pill-radius);
+  font: var(--type-ui);
   color: var(--ink);
   white-space: nowrap;
 }
 
 .pill--button {
   background: none;
-  font-family: inherit;
   cursor: pointer;
   transition:
-    background-color 0.3s var(--ease-out),
-    color 0.3s var(--ease-out);
+    background-color var(--speed) var(--ease-out),
+    color var(--speed) var(--ease-out);
 }
 
 .pill--button:hover,
@@ -75,129 +44,141 @@
   border-style: dashed;
 }
 
-/* Blog index */
-.blog-intro {
-  display: grid;
-  grid-template-columns: 1fr minmax(0, 420px);
-  align-items: end;
-  gap: 40px;
-}
-
+/* ---------- Index: hero ---------- */
+/* "Blog" at 424px Black (y 81), lead paragraph beneath it (x 74, y 539) */
 .blog-intro__title {
   margin: 0;
-  font-size: clamp(56px, 9vw, 90px);
-  font-weight: 900;
-  line-height: 0.95;
+  font: var(--type-hero);
+  color: var(--ink);
 }
 
 .blog-intro__lead {
-  margin: 0;
-  font-size: 15px;
-  line-height: 24px;
-  letter-spacing: 0.05em;
+  max-width: var(--measure-intro); /* 699 */
+  margin: clamp(20px, 2.36vw, 34px) 0 0 clamp(0px, 1.46vw, 21px); /* 539 − 505, x 74 − 53 */
+  font: var(--type-intro);
+  letter-spacing: var(--track);
 }
 
 .phase-filter {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 72px 0 8px;
+  margin: clamp(48px, 5vw, 72px) 0 0;
 }
 
+/* ---------- Index: entry rows ---------- */
+/* Borderless in the refined design — the 139px row and the hover reveal
+   do the separating, so no rules between entries. */
 .entry-list {
-  margin: 40px 0 0;
+  margin: clamp(56px, 7.3vw, 105px) 0 0; /* 693 − 588 */
   padding: 0;
   list-style: none;
-  border-top: 3px solid var(--ink);
+}
+
+.phase-filter + .entry-list {
+  margin-top: clamp(32px, 2.78vw, 40px);
 }
 
 .entry-row {
   display: grid;
-  grid-template-columns: 73px minmax(0, 1fr) auto;
-  gap: 0 24px;
+  grid-template-columns: var(--row-number-column) minmax(0, 1fr) auto; /* 73 */
   align-items: center;
-  min-height: 100px;
-  padding: 24px 0;
-  border-bottom: 3px solid var(--ink);
+  gap: 0; /* the 73 column already spans number → text (x 0 → 73) */
+  min-height: var(--row-height); /* 139 */
   color: var(--ink);
   text-decoration: none;
 }
 
 .entry-row__number {
-  align-self: start;
-  font-size: 30px;
-  line-height: 1;
+  align-self: start; /* number sits at the top of the row (y 0) */
+  font: var(--type-number);
 }
 
 .entry-row__main {
   display: grid;
-  gap: 10px;
-  transition: translate 0.6s var(--ease-out);
 }
 
 .entry-row__date {
-  font-size: 12px;
-  line-height: 1;
-  letter-spacing: 0.05em;
+  font: var(--type-meta); /* 15/24, y 43 */
+  letter-spacing: var(--track);
+  text-transform: uppercase;
 }
 
 .entry-row__title {
-  font-size: clamp(26px, 3vw, 40px);
-  font-weight: 600;
-  line-height: 1.1;
+  font: var(--type-row-title); /* 40 Semi Bold, y 67 */
   text-wrap: balance;
 }
 
+/* Hidden until hover, then it opens and pushes the date and title upward —
+   the 36px shift Figma draws between the row's Default and hover variants. */
 .entry-row__summary {
-  max-width: 62ch;
-  font-size: 15px;
-  line-height: 24px;
-  letter-spacing: 0.05em;
+  display: grid;
+  grid-template-rows: 1fr;
+  overflow: hidden;
+}
+
+.entry-row__summary > span {
+  min-height: 0;
+  max-width: 833px; /* summary width in the hover variant */
+  padding-top: clamp(6px, 0.76vw, 11px); /* 82 − 71 */
+  font: var(--type-summary); /* 17/25 */
+  letter-spacing: var(--track);
 }
 
 .entry-row__tags {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 20px;
-  transition:
-    opacity 0.6s var(--ease-out),
-    translate 0.6s var(--ease-out);
+  gap: var(--pill-gap); /* 22 */
+  padding-left: 40px; /* keeps a long title clear of the pills */
 }
 
-/* Figma hover: title nudges up-left, tags rise into view */
 @media (hover: hover) {
-  .entry-row__tags {
-    opacity: 0;
-    translate: 0 15px;
+  .entry-row__summary {
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--speed-slow) var(--ease-out);
   }
 
+  .entry-row__summary > span,
+  .entry-row__tags {
+    opacity: 0;
+    transition: opacity var(--speed-slow) var(--ease-out);
+  }
+
+  .entry-row:hover .entry-row__summary,
+  .entry-row:focus-visible .entry-row__summary {
+    grid-template-rows: 1fr;
+  }
+
+  .entry-row:hover .entry-row__summary > span,
+  .entry-row:focus-visible .entry-row__summary > span,
   .entry-row:hover .entry-row__tags,
   .entry-row:focus-visible .entry-row__tags {
     opacity: 1;
-    translate: 0 0;
-  }
-
-  .entry-row:hover .entry-row__main,
-  .entry-row:focus-visible .entry-row__main {
-    translate: -5px -5px;
   }
 }
 
 .blog-empty {
   margin: 56px 0 0;
-  font-size: 15px;
-  letter-spacing: 0.05em;
+  font: var(--type-body);
+  letter-spacing: var(--track);
 }
 
-/* Entry page */
+/* ---------- Links ---------- */
 .text-link {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-size: 14px;
+  gap: 10px; /* 21px rule + 10 gap before "All Entries" */
+  font: var(--type-ui);
   color: var(--ink);
   text-decoration: none;
+}
+
+.text-link::before {
+  content: '';
+  width: 21px;
+  height: 1px;
+  background: var(--line);
 }
 
 .text-link:hover {
@@ -213,103 +194,30 @@
   rotate: 180deg;
 }
 
-.entry__back {
-  margin-bottom: 56px;
-}
-
+/* ---------- Entry page ---------- */
+/* Rail column (146 = 199 − 53), then the 1115 text column */
+/* Explicit rows (meta, header, body) so the rail can span from the header to
+   the end of the article — `-1` only resolves against the explicit grid. */
 .entry {
   display: grid;
-  grid-template-columns: 40px minmax(0, 760px);
-  column-gap: 33px;
+  grid-template-columns: var(--rail-column) minmax(0, var(--measure));
+  grid-template-rows: auto auto auto;
+  margin-top: clamp(40px, 5.49vw, 79px); /* 161 − 82 */
 }
 
-/* Reading progress: START → END rail in the sheet's line language */
-.reading-progress {
-  grid-row: 1 / span 2;
-  position: sticky;
-  top: 140px;
+.entry__back {
+  grid-row: 1;
+  grid-column: 1;
   align-self: start;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  justify-items: center;
-  gap: 14px;
-  width: 40px;
-  height: min(455px, calc(100svh - 220px));
-  font-size: 10px;
-  line-height: 10px;
-  color: var(--line);
+  margin-left: clamp(0px, 1.39vw, 20px); /* x 73 − 53 */
+  white-space: nowrap;
 }
 
-.reading-progress__rail {
-  position: relative;
-  width: 1px;
-  background: color-mix(in srgb, var(--ink) 25%, transparent);
-}
-
-.reading-progress__fill {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: -1px;
-  width: 3px;
-  background: var(--ink);
-  transform-origin: top;
-}
-
-.reading-progress__tick {
-  position: absolute;
-  left: -6px;
-  width: 13px;
-  height: 1px;
-  background: color-mix(in srgb, var(--ink) 35%, transparent);
-  transition: background-color 0.3s var(--ease-out);
-}
-
-.reading-progress__tick[data-passed] {
-  background: var(--ink);
-}
-
-/* Current position, drawn like the sheet's corner crosshairs */
-.reading-progress__marker {
-  position: absolute;
-  left: -10px;
-  width: 21px;
-  height: 21px;
-  margin-top: -10.5px;
-}
-
-.reading-progress__marker::before,
-.reading-progress__marker::after {
-  content: '';
-  position: absolute;
-  background: var(--ink);
-}
-
-.reading-progress__marker::before {
-  top: 0;
-  left: 10px;
-  width: 1px;
-  height: 100%;
-}
-
-.reading-progress__marker::after {
-  top: 10px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-}
-
-/* Narrow screens: a bar across the top of the window */
-.reading-progress-bar {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  height: 3px;
-  background: var(--ink);
-  transform-origin: left;
+.entry__counter {
+  grid-row: 1;
+  grid-column: 2;
+  margin: 0;
+  font: var(--type-number); /* "01/03" at 30px, y 161 */
 }
 
 .entry__header,
@@ -317,46 +225,100 @@
   grid-column: 2;
 }
 
-.entry__rule {
-  width: min(634px, 100%);
-  height: 0;
-  margin: 0 0 40px;
-  border: 0;
-  border-top: 3px solid var(--ink);
+.entry__title {
+  margin: clamp(16px, 1.94vw, 28px) 0 0; /* 219 − 191 */
+  font: var(--type-title); /* 70 Semi Bold */
+  text-wrap: balance;
 }
 
 .entry__tags {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 32px;
-}
-
-.entry__title {
-  max-width: 16em;
-  margin: 0;
-  font-size: clamp(30px, 4vw, 40px);
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: 0.05em;
-  text-wrap: balance;
+  margin-top: clamp(16px, 1.94vw, 28px); /* 387 − 359 */
 }
 
 .entry__summary {
-  max-width: 60ch;
-  margin: 24px 0 0;
-  font-size: 15px;
-  line-height: 24px;
-  letter-spacing: 0.05em;
+  margin: clamp(32px, 5.49vw, 79px) 0 0; /* 496 − 417 */
+  font: var(--type-lede); /* 23/37 Medium Italic */
+  letter-spacing: var(--track);
 }
 
-/* Markdown body */
+/* ---------- Reading rail (Figma "Frame 7": 33 × 700 at x 109) ---------- */
+.reading-progress {
+  grid-row: 2 / -1;
+  grid-column: 1;
+  position: sticky;
+  top: clamp(24px, 8vh, 100px);
+  align-self: start;
+  justify-self: end;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  gap: 16px;
+  width: var(--rail-width); /* 33 */
+  height: min(700px, calc(100svh - 200px));
+  margin-top: clamp(0px, 5.49vw, 79px); /* starts at y 270, beside the title */
+  margin-right: var(--rail-gap); /* 57 clear of the text column */
+  font: var(--type-ui); /* "Start" / "End" at 14px */
+  color: var(--line);
+}
+
+/* 1px track, 2px progress — the design separates them by weight, not tint */
+.reading-progress__rail {
+  position: relative;
+  width: 1px;
+  background: var(--line);
+}
+
+.reading-progress__fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -0.5px;
+  width: 2px;
+  background: var(--line);
+  transform-origin: top;
+}
+
+/* 17px ticks, centred on the track, at each section heading */
+.reading-progress__tick {
+  position: absolute;
+  left: -8px;
+  width: 17px;
+  height: 1px;
+  background: var(--line);
+}
+
+/* Where you are now: the 2px cap that closes the progress line */
+.reading-progress__marker {
+  position: absolute;
+  left: -8px;
+  width: 17px;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--line);
+}
+
+/* Narrow screens: a bar across the top of the window instead */
+.reading-progress-bar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  height: 2px;
+  background: var(--ink);
+  transform-origin: left;
+}
+
+/* ---------- Entry body ---------- */
 .entry__body {
-  max-width: 68ch;
-  margin-top: 64px;
-  font-size: 15px;
-  line-height: 24px;
-  letter-spacing: 0.05em;
+  max-width: var(--measure-text);
+  margin-top: clamp(40px, 5.56vw, 80px); /* 630 − 550 */
+  font: var(--type-body); /* 18/28 */
+  letter-spacing: var(--track);
 }
 
 .entry__body > :first-child {
@@ -368,21 +330,20 @@
 .entry__body ol,
 .entry__body blockquote,
 .entry__body table {
-  margin: 0 0 20px;
+  margin: 0 0 28px;
 }
 
 .entry__body h2 {
-  margin: 56px 0 16px;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 24px;
+  margin: clamp(40px, 4.44vw, 64px) 0 15px; /* 695 − 680 */
+  font: var(--type-h2); /* 40/50 Semi Bold */
+  letter-spacing: var(--track);
 }
 
 .entry__body h3,
 .entry__body h4 {
-  margin: 40px 0 12px;
-  font-size: 15px;
-  font-weight: 700;
+  margin: clamp(28px, 2.78vw, 40px) 0 12px;
+  font: var(--type-h3);
+  letter-spacing: var(--track);
 }
 
 .entry__body ul,
@@ -399,11 +360,6 @@
   margin-left: -1.4em;
 }
 
-.entry__body input[type='checkbox'] {
-  margin: 0 10px 0 0;
-  accent-color: var(--ink);
-}
-
 .entry__body a {
   color: var(--ink);
   text-decoration-thickness: 1px;
@@ -416,28 +372,28 @@
 
 .entry__body blockquote {
   padding-left: 20px;
-  border-left: 1px solid var(--ink);
+  border-left: 1px solid var(--line);
   font-weight: 600;
 }
 
 .entry__body hr {
   margin: 48px 0;
   border: 0;
-  border-top: 1px solid var(--ink);
+  border-top: 1px solid var(--line);
 }
 
 .entry__body code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 0.9em;
   letter-spacing: 0;
 }
 
 .entry__body pre {
   overflow-x: auto;
-  margin: 0 0 20px;
+  margin: 0 0 28px;
   padding: 16px 20px;
-  border: 1px solid var(--ink);
-  border-radius: 5px;
+  border: 1px solid var(--line);
+  border-radius: var(--button-radius);
   line-height: 20px;
 }
 
@@ -445,11 +401,11 @@
 .entry__body .table-scroll {
   width: max-content;
   min-width: 100%;
-  max-width: calc(100vw - 2 * clamp(24px, 6.875vw, 99px) - 73px);
+  max-width: calc(100vw - 2 * var(--gutter) - var(--rail-column));
   margin: 40px 0;
   overflow-x: auto;
-  border-top: 3px solid var(--ink);
-  border-bottom: 3px solid var(--ink);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 
 .entry__body .table-scroll:focus-visible {
@@ -470,7 +426,7 @@
 .entry__body td {
   min-width: 8em;
   padding: 12px 28px 12px 0;
-  border-bottom: 1px solid var(--ink);
+  border-bottom: 1px solid var(--line);
   text-align: left;
   vertical-align: top;
 }
@@ -484,32 +440,7 @@
   border-bottom: 0;
 }
 
-@media (max-width: 1000px) {
-  .entry__body .table-scroll {
-    max-width: calc(100vw - 2 * clamp(24px, 6.875vw, 99px));
-  }
-
-  /* Small tables wrap to fit the screen */
-  .entry__body th,
-  .entry__body td {
-    min-width: 0;
-    padding-right: 20px;
-  }
-
-  .entry__body th {
-    white-space: normal;
-  }
-
-  /* Column maps (4+ columns) scroll sideways with wider columns, so long cells don't make rows tall */
-  .entry__body table:has(th:nth-child(4)) :is(th, td) {
-    min-width: 13em;
-  }
-
-  .entry__body table:has(th:nth-child(4)) th {
-    white-space: nowrap;
-  }
-}
-
+/* Figures: the placeholder block in Figma is a #D9D9D9 rectangle */
 .entry-figure {
   margin: 40px 0;
 }
@@ -519,11 +450,12 @@
   display: block;
   width: 100%;
   height: auto;
+  background: var(--placeholder);
 }
 
 .entry-embed {
   aspect-ratio: 16 / 9;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--line);
 }
 
 .entry-embed iframe,
@@ -536,32 +468,51 @@
 
 .entry-figure figcaption {
   margin-top: 10px;
-  font-size: 12px;
+  font: var(--type-ui);
   line-height: 18px;
-  color: #666666;
+  letter-spacing: var(--track);
 }
 
 .entry__body .footnotes {
   margin-top: 64px;
   padding-top: 24px;
-  border-top: 1px solid var(--ink);
-  font-size: 13px;
-  line-height: 20px;
+  border-top: 1px solid var(--line);
+  font: var(--type-summary);
+  letter-spacing: var(--track);
 }
 
 .entry__body .footnotes h2 {
   margin-top: 0;
-  font-size: 15px;
+  font: var(--type-h3);
 }
 
-/* Previous / next */
+/* Task-list checkboxes in the ink outline language */
+.entry__body input[type='checkbox'] {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin: 0 10px 0 0;
+  vertical-align: -2px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: transparent;
+}
+
+.entry__body input[type='checkbox']:checked {
+  background:
+    center / 10px 10px no-repeat
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 5.2 4 7.5l4.5-5' fill='none' stroke='%23e8e8e1' stroke-width='1.5'/%3E%3C/svg%3E"),
+    var(--ink);
+}
+
+/* ---------- Previous / next ---------- */
 .entry-pager {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
-  margin-top: 120px;
+  margin-top: clamp(64px, 8.33vw, 120px);
   padding-top: 32px;
-  border-top: 3px solid var(--ink);
+  border-top: 1px solid var(--line);
 }
 
 .entry-pager__link {
@@ -580,13 +531,11 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 14px;
+  font: var(--type-ui);
 }
 
 .entry-pager__title {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.3;
+  font: var(--type-h3);
 }
 
 .entry-pager__link:hover .entry-pager__title {
@@ -598,32 +547,40 @@
   display: grid;
   justify-items: start;
   gap: 24px;
-  font-size: 15px;
-  letter-spacing: 0.05em;
+  margin-top: clamp(40px, 5.49vw, 79px);
+  font: var(--type-body);
+  letter-spacing: var(--track);
 }
 
-/* Task-list checkboxes in the ink outline language (browser default is pale gray) */
-.entry__body input[type='checkbox'] {
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  vertical-align: -2px;
-  border: 1px solid var(--ink);
-  border-radius: 3px;
-  background: transparent;
-  opacity: 1;
+/* ---------- Footer (copyright, centred at y 1101) ---------- */
+.site-footer {
+  margin-top: clamp(64px, 8.33vw, 120px);
+  padding-bottom: clamp(40px, 3.9vw, 56px);
+  font: var(--type-ui);
+  color: var(--ink);
+  text-align: center;
 }
 
-.entry__body input[type='checkbox']:checked {
-  background:
-    center / 10px 10px no-repeat
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 5.2 4 7.5l4.5-5' fill='none' stroke='%23e8e8e1' stroke-width='1.5'/%3E%3C/svg%3E"),
-    var(--ink);
-}
-
+/* ---------- Responsive ---------- */
 @media (max-width: 1000px) {
   .entry {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .entry__back {
+    grid-column: 1;
+    margin-left: 0;
+    margin-bottom: 32px;
+  }
+
+  .entry__counter,
+  .entry__header,
+  .entry__body {
+    grid-column: 1;
+  }
+
+  .entry__counter {
+    grid-row: 2;
   }
 
   .reading-progress {
@@ -634,70 +591,72 @@
     display: block;
   }
 
-  .entry__header,
-  .entry__body {
-    grid-column: 1;
+  .entry__body .table-scroll {
+    max-width: calc(100vw - 2 * var(--gutter));
+  }
+
+  /* Small tables wrap to fit the screen */
+  .entry__body th,
+  .entry__body td {
+    min-width: 0;
+    padding-right: 20px;
+  }
+
+  .entry__body th {
+    white-space: normal;
+  }
+
+  /* Column maps (4+ columns) scroll sideways with wider columns */
+  .entry__body table:has(th:nth-child(4)) :is(th, td) {
+    min-width: 13em;
+  }
+
+  .entry__body table:has(th:nth-child(4)) th {
+    white-space: nowrap;
   }
 }
 
 @media (max-width: 860px) {
-  .page {
-    padding-top: 96px;
-    padding-bottom: 120px;
-  }
-
-  .site-header {
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 64px;
-  }
-
-  .site-header nav {
-    align-self: stretch;
-  }
-
-  .site-header__nav {
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    gap: 4px;
-  }
-
-  .site-header__nav .nav__link {
-    min-width: 0;
-    padding: 0 10px;
-  }
-
-  .blog-intro {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .phase-filter {
-    margin-top: 48px;
-  }
-
   .entry-row {
     grid-template-columns: 48px minmax(0, 1fr);
+    gap: 0 16px;
+    padding: 28px 0;
   }
 
-  .entry-row__number {
-    font-size: 22px;
+  /* Stacked rows have no room for a hover reveal, so the summary and tags
+     stay open — otherwise they hold space while invisible. */
+  .entry-row__summary {
+    grid-template-rows: 1fr;
+  }
+
+  .entry-row__summary > span,
+  .entry-row__tags {
+    opacity: 1;
   }
 
   .entry-row__tags {
     grid-column: 2;
     justify-content: flex-start;
     margin-top: 16px;
+    padding-left: 0;
   }
 
   .entry-pager {
     grid-template-columns: 1fr;
   }
+
+  .entry-pager__link--next {
+    justify-items: start;
+    text-align: left;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .entry-row__main,
-  .entry-row__tags {
+  .entry-row__summary,
+  .entry-row__summary > span,
+  .entry-row__tags,
+  .pill--button,
+  .nav__link {
     transition: none;
   }
 }

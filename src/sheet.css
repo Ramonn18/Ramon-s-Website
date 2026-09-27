@@ -1,6 +1,8 @@
 /*
-  Shared print-sheet chrome from the Figma Home frames, used on every page:
-  corner crosshairs, edge labels, and the nav buttons.
+  Shared print-sheet chrome, used by every page inside a `.sheet`:
+  corner crosshairs, edge labels, the nav buttons and the page header.
+  Measurements come from the Figma "Refined Prototype" frames; all values
+  are tokens from tokens.css.
 */
 
 .sheet {
@@ -9,11 +11,11 @@
   background: var(--cream);
 }
 
-/* Corner crosshairs */
+/* ---------- Corner crosshairs (64 × 64 at 53 / 49) ---------- */
 .crosshair {
   position: absolute;
-  width: 64px;
-  height: 64px;
+  width: var(--crosshair-size);
+  height: var(--crosshair-size);
   pointer-events: none;
 }
 
@@ -24,53 +26,82 @@
   background: var(--line);
 }
 
+/* The cross sits at the midpoint of the 64px box, as in Figma */
 .crosshair::before {
   top: 0;
-  left: 31.5px;
+  left: calc(50% - 0.5px);
   width: 1px;
   height: 100%;
 }
 
 .crosshair::after {
-  top: 31.5px;
+  top: calc(50% - 0.5px);
   left: 0;
   width: 100%;
   height: 1px;
 }
 
-.crosshair--tl { top: 49px; left: 53px; }
-.crosshair--tr { top: 49px; right: 53px; }
-.crosshair--bl { bottom: 44px; left: 53px; }
-.crosshair--br { bottom: 44px; right: 53px; }
-
-.crosshair[data-collapsed] {
-  top: calc(50% - 32px);
-  right: auto;
-  bottom: auto;
-  left: calc(50% - 32px);
+.crosshair--tl {
+  top: var(--crosshair-inset);
+  left: var(--gutter);
 }
 
-/* Edge labels; the bottom row is the top row rotated 180° */
+.crosshair--tr {
+  top: var(--crosshair-inset);
+  right: var(--gutter);
+}
+
+.crosshair--bl {
+  bottom: var(--crosshair-inset);
+  left: var(--gutter);
+}
+
+.crosshair--br {
+  bottom: var(--crosshair-inset);
+  right: var(--gutter);
+}
+
+/* Home screen only: the four crosshairs stack into one during the intro */
+.crosshair[data-collapsed] {
+  top: calc(50% - var(--crosshair-size) / 2);
+  right: auto;
+  bottom: auto;
+  left: calc(50% - var(--crosshair-size) / 2);
+}
+
+/* ---------- Edge labels (10px, at x 99 / y 61) ---------- */
+/* The bottom row is the top row rotated 180°, so the start label lands
+   bottom-right and the end label bottom-left — as drawn in Figma. */
 .meta {
   position: absolute;
-  left: 99px;
-  right: 99px;
+  left: calc(var(--gutter) + var(--label-indent));
+  right: calc(var(--gutter) + var(--label-indent));
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   margin: 0;
-  font-size: 10px;
-  line-height: 10px;
+  font: var(--type-label);
   color: var(--line);
   white-space: pre;
   pointer-events: none;
 }
 
-.meta--top { top: 59px; }
-.meta--bottom { bottom: 54px; }
+.meta--top {
+  top: var(--label-baseline);
+}
 
-.meta__start { justify-self: start; }
+.meta--bottom {
+  bottom: calc(var(--label-baseline) - 7px);
+}
+
+.meta__start {
+  justify-self: start;
+}
+
+/* Pinned to the last column so the row reads start … end whether the page
+   supplies a middle label (Home) or not (inner pages) */
 .meta__end {
+  grid-column: 3;
   display: flex;
   gap: 60px;
   justify-self: end;
@@ -78,28 +109,29 @@
 
 .meta[data-collapsed] {
   top: calc(50% - 5px);
+  right: calc(50% - 60px);
   bottom: auto;
   left: calc(50% - 60px);
-  right: calc(50% - 60px);
 }
 
-/* Nav button (Figma "Buttons" component: Default / Variant2 on hover) */
+/* ---------- Nav button (Figma "Buttons": Default / Variant2 on hover) ---------- */
 .nav__link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 117px;
-  height: 30px;
-  padding: 0 22.5px;
-  border-radius: 5px;
-  font-size: 14px;
-  line-height: 1;
+  /* Figma hand-tunes each button's padding to a set width; one padding value
+     for all of them keeps the system consistent as labels change. */
+  min-width: 77px;
+  height: var(--button-height);
+  padding: 0 var(--button-pad);
+  border-radius: var(--button-radius);
+  font: var(--type-ui);
   color: var(--ink);
   text-decoration: none;
   white-space: nowrap;
   transition:
-    background-color 0.3s var(--ease-out),
-    color 0.3s var(--ease-out);
+    background-color var(--speed) var(--ease-out),
+    color var(--speed) var(--ease-out);
 }
 
 .nav__link:hover,
@@ -109,31 +141,94 @@
   color: var(--white);
 }
 
+/* ---------- Page header ---------- */
+/* Monogram centred with two buttons either side, matching the Home screen
+   and the Blog frames: monogram 50 × 52 at y 30, buttons 30 tall at y 37. */
+.site-header {
+  min-height: 52px;
+}
+
+.site-header__menu {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+}
+
+.site-header__home {
+  grid-column: 2;
+  display: block;
+  width: 50px;
+  border-radius: 4px;
+}
+
+.site-header__home img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.site-header__nav {
+  display: flex;
+  gap: 50px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each group sits centred in its half of the sheet */
+.site-header__nav--left {
+  grid-column: 1;
+  justify-self: center;
+}
+
+.site-header__nav--right {
+  grid-column: 3;
+  justify-self: center;
+}
+
+@media (max-width: 1100px) {
+  .site-header__nav {
+    gap: 16px;
+  }
+
+  .site-header__nav .nav__link {
+    padding: 0 14px;
+  }
+}
+
+/* Phones: monogram on top, all four buttons in one row beneath it */
 @media (max-width: 860px) {
-  .crosshair {
-    width: 40px;
-    height: 40px;
+  .site-header__menu {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 24px;
   }
 
-  .crosshair::before { left: 19.5px; }
-  .crosshair::after { top: 19.5px; }
-
-  .crosshair--tl { top: 16px; left: 16px; }
-  .crosshair--tr { top: 16px; right: 16px; }
-  .crosshair--bl { bottom: 16px; left: 16px; }
-  .crosshair--br { bottom: 16px; right: 16px; }
-
-  .crosshair[data-collapsed] {
-    top: calc(50% - 20px);
-    left: calc(50% - 20px);
+  .site-header__home {
+    grid-column: 1;
+    grid-row: 1;
   }
 
-  .meta {
-    left: 64px;
-    right: 64px;
+  .site-header__nav {
+    gap: 4px;
   }
 
-  .meta--top { top: 31px; }
-  .meta--bottom { bottom: 31px; }
-  .meta__end { gap: 16px; }
+  .site-header__nav--left {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .site-header__nav--right {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .site-header__nav .nav__link {
+    padding: 0 10px;
+  }
+
+  .meta__end {
+    gap: 16px;
+  }
 }
