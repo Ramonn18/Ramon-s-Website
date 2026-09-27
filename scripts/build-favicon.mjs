@@ -4,18 +4,14 @@
 // All that detail turns to mush at 16px, the size a browser tab actually shows,
 // so the favicon uses only the solid R glyph, cropped square.
 //
-// It also carries its own prefers-color-scheme rule: index.html points at the
-// light and white monograms with `media` attributes, and this is the no-media
-// fallback for browsers that ignore those.
-//
-// Run `npm run favicon` after changing the monogram.
+// One file, one ink color, no theme switching — index.html points at it and
+// nothing else. Run `npm run favicon` after changing the monogram.
 
 import { readFileSync, writeFileSync } from 'node:fs'
 
 const SOURCE = 'src/assets/monogram.svg'
 const OUTPUT = 'public/favicon.svg'
-const LIGHT = '#1a1a1a'
-const DARK = '#ffffff'
+const FILL = '#1a1a1a'
 const PADDING = 14 // user units of air around the glyph
 
 const svg = readFileSync(SOURCE, 'utf8')
@@ -113,13 +109,7 @@ const out = `<?xml version="1.0" encoding="UTF-8"?>
      Just the solid R, cropped square, so it stays legible at 16px.
      Regenerate with: npm run favicon -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="${r(originX)} ${r(originY)} ${r(side)} ${r(side)}">
-  <style>
-    .mark { fill: ${LIGHT}; }
-    @media (prefers-color-scheme: dark) {
-      .mark { fill: ${DARK}; }
-    }
-  </style>
-  <path class="mark" d="${glyph}"/>
+  <path fill="${FILL}" d="${glyph}"/>
 </svg>
 `
 
