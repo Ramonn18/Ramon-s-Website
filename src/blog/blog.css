@@ -274,7 +274,7 @@
   transform-origin: top;
 }
 
-/* 17px ticks, centred on the track, at each section heading */
+/* 17px ticks, centered on the track, at each section heading */
 .reading-progress__tick {
   position: absolute;
   left: -8px;
@@ -545,7 +545,7 @@
   letter-spacing: var(--track);
 }
 
-/* ---------- Footer (copyright, centred at y 1101) ---------- */
+/* ---------- Footer (copyright, centered at y 1101) ---------- */
 .site-footer {
   margin-top: clamp(64px, 8.33vw, 120px);
   padding-bottom: clamp(40px, 3.9vw, 56px);

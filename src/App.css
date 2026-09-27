@@ -50,9 +50,15 @@
   margin-left: 100px;
 }
 
+/* Collapsed, every link is stacked dead center, behind the monogram, so the
+   menu opens *out of the button*. The items are absolute, which leaves this
+   list with no in-flow content — without `stretch` it shrinks to zero width
+   and `justify-self: end/start` strands it on a screen edge, so `left: 50%`
+   would resolve against nothing and the links would fly in from the sides. */
 .nav[data-collapsed] {
   position: absolute;
   inset: 0;
+  justify-self: stretch;
   margin: 0;
   pointer-events: none;
 }
@@ -83,10 +89,31 @@
   cursor: default;
 }
 
+/* The monogram is a physical button: it sits raised, and its shadow collapses
+   as it travels down — halfway on hover, fully on press. The scale and lift
+   are driven by Motion in App.jsx; this is just the depth under it. */
 .mark img {
   display: block;
   width: 100%;
   height: 100%;
+  filter: drop-shadow(0 7px 11px rgb(26 26 26 / 0.15));
+  transition: filter var(--speed) var(--ease-out);
+}
+
+.mark:hover:not(:disabled) img,
+.mark:focus-visible:not(:disabled) img {
+  filter: drop-shadow(0 3px 5px rgb(26 26 26 / 0.12));
+}
+
+.mark:active:not(:disabled) img,
+.mark[aria-expanded='true'] img {
+  filter: drop-shadow(0 1px 2px rgb(26 26 26 / 0.1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark img {
+    transition: none;
+  }
 }
 
 /* Tablet and phone: stack the nav above and below the monogram */

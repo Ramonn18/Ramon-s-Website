@@ -142,12 +142,13 @@
 }
 
 /* ---------- Page header ---------- */
-/* Monogram centred with two buttons either side, matching the Home screen
-   and the Blog frames: monogram 50 × 52 at y 30, buttons 30 tall at y 37. */
-/* Display type set tight (line-height 1 on a 424px hero) overflows its own box
-   by the negative half-leading — about 44px — and, being later in the DOM,
-   would paint over the nav and swallow its clicks. Lifting the header keeps
-   the buttons reachable under any heading a page puts beneath them. */
+/* Monogram centered with two buttons either side, matching the Home screen
+   and the Blog frames: monogram 50 × 52 at y 30, buttons 30 tall at y 37.
+
+   The header is lifted above the page because display type set tight
+   (line-height 1 on a 424px hero) overflows its own box by the negative
+   half-leading — about 44px — and, being later in the DOM, would otherwise
+   paint over the nav and swallow its clicks. */
 .site-header {
   position: relative;
   z-index: 1;
@@ -182,7 +183,7 @@
   list-style: none;
 }
 
-/* Each group sits centred in its half of the sheet */
+/* Each group sits centered in its half of the sheet */
 .site-header__nav--left {
   grid-column: 1;
   justify-self: center;

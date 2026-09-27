@@ -16,7 +16,7 @@ function NavGroup({ items, side }) {
   )
 }
 
-// Monogram centred with two buttons either side, as on the Home screen.
+// Monogram centered with two buttons either side, as on the Home screen.
 export default function SiteHeader() {
   return (
     <header className="site-header">

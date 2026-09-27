@@ -12,6 +12,18 @@ const INTRO = { duration: 0.6, ease: [0, 0, 0.58, 1] }
 const REVEAL = { type: 'spring', mass: 1, stiffness: 80, damping: 20 }
 const INSTANT = { duration: 0 }
 
+// A button's travel: quick and firm, not the springy curve the menu uses.
+const PRESS = { type: 'spring', stiffness: 420, damping: 32 }
+// Halfway down on hover, the rest of the way on press, and it stays down
+// while the menu it opened is showing.
+const BUTTON = {
+  raised: { scale: 1, y: 0 },
+  half: { scale: 0.97, y: 3 },
+  pressed: { scale: 0.94, y: 6 },
+}
+// Each link leaves the button a beat after the one before it
+const STAGGER = 0.05
+
 const CORNERS = ['tl', 'tr', 'bl', 'br']
 
 // Remembered for this page load only: coming back from another page skips
@@ -39,16 +51,17 @@ function MetaRow({ position, collapsed }) {
   )
 }
 
-function NavGroup({ items, side, open }) {
+function NavGroup({ items, side, open, transition }) {
   return (
     <ul className={`nav nav--${side}`} data-collapsed={open ? undefined : true}>
-      {items.map((item) => (
+      {items.map((item, index) => (
         <motion.li
           key={item.to}
           layout
           className="nav__item"
           initial={false}
           animate={{ opacity: open ? 1 : 0 }}
+          transition={{ ...transition, delay: open ? index * STAGGER : 0 }}
         >
           <Link className="nav__link" to={item.to} tabIndex={open ? undefined : -1}>
             {item.label}
@@ -118,7 +131,7 @@ export default function App() {
         <MetaRow position="bottom" collapsed={loading} />
 
         <nav className="hub" aria-label="Main">
-          <NavGroup items={NAV_LEFT} side="left" open={open} />
+          <NavGroup items={NAV_LEFT} side="left" open={open} transition={transition} />
 
           <motion.button
             type="button"
@@ -128,12 +141,17 @@ export default function App() {
             aria-expanded={open}
             aria-label={open ? 'Hide menu' : 'Show menu'}
             initial={false}
-            animate={{ opacity: loading ? 0 : 1 }}
+            animate={{
+              opacity: loading ? 0 : 1,
+              ...(reduceMotion ? {} : open ? BUTTON.half : BUTTON.raised),
+            }}
+            whileHover={loading || reduceMotion ? undefined : { ...BUTTON.half, transition: PRESS }}
+            whileTap={loading || reduceMotion ? undefined : { ...BUTTON.pressed, transition: PRESS }}
           >
             <img src={monogram} alt="" width="312" height="322" />
           </motion.button>
 
-          <NavGroup items={NAV_RIGHT} side="right" open={open} />
+          <NavGroup items={NAV_RIGHT} side="right" open={open} transition={transition} />
         </nav>
       </motion.main>
     </MotionConfig>

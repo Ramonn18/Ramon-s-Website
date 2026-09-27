@@ -1,4 +1,4 @@
-// Copyright line, centred at the foot of the sheet (Figma y 1101).
+// Copyright line, centered at the foot of the sheet (Figma y 1101).
 export default function SiteFooter() {
   return (
     <footer className="site-footer">
