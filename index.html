@@ -2,7 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- Ink monogram on light tab chrome, white monogram on dark.
+         Relative paths so Vite bundles them from src/assets — one source of
+         truth with the monogram the site itself renders.
+         favicon.svg comes first as a no-media fallback: it carries its own
+         prefers-color-scheme rule, so a browser that ignores `media` below
+         still gets the right color rather than white-on-white. -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="./src/assets/monogram.svg"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="./src/assets/monogram_white.svg"
+      media="(prefers-color-scheme: dark)"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ramon Naula</title>
   </head>
