@@ -75,6 +75,7 @@
   /* ---------- Components ---------- */
   --button-height: 30px;
   --button-radius: 5px; /* nav buttons */
+  --media-radius: 8px; /* entry images and embeds */
   --button-pad: 22.5px;
   --pill-radius: 25px; /* tag pills */
   --pill-pad: 20px;

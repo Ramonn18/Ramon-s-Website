@@ -53,8 +53,8 @@ It means I want to see my parents live their best lives with the confidence that
 
 **My Gift - To home**
 
-← ![Pencil sketches of MEEP!, a little house plush with a screen, a clock and a to-do list, next to handwritten notes about the idea](img-2284.jpg)
+← ![Pencil sketches of MEEP! Initial Draft and introduction.](img-2284.jpg)
 
 I had to step back a little and look around my space, see what it is and absorb what the environment offers to anyone in it. Later on I thought of many ways a built environment is meant for people. Some treat it as the literal meaning and others give it a personality. I thought “Personality and space mean a lot” so this first version of my GIFT is a personified figure of what a smart space is. In the literal sense and in a metaphorical sense. His name is MEEP! And he opens the door to your thoughts.
 
-![A cardboard MEEP! with red edges showing "Monday 14", a meeting and a to-do list, standing behind the pencil sketches](img-2288.jpg)
+![MEEP! prototype. Done with recycled cardboard.](img-2288.jpg)

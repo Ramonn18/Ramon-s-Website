@@ -106,7 +106,9 @@ export default function Markdown({ slug, children }) {
         // The entry title is the page's only h1
         h1: ({ node: _node, ...props }) => <h2 {...props} />,
 
-        // An image on its own line becomes a figure; its "title" is the caption
+        // An image on its own line becomes a figure; its "title" is the caption.
+        // The alt text is also printed under the image as "(image: …)". Screen
+        // readers already announce the alt, so the printed copy is hidden from them.
         p({ node, children: content }) {
           const kids = node.children.filter((kid) => !(kid.type === 'text' && !kid.value.trim()))
           if (kids.length === 1 && kids[0].tagName === 'img') {
@@ -114,6 +116,11 @@ export default function Markdown({ slug, children }) {
             return (
               <figure className="entry-figure">
                 <img src={assetUrl(slug, src)} alt={alt || ''} loading="lazy" />
+                {alt && (
+                  <p className="entry-figure__description" aria-hidden="true">
+                    (image: {alt})
+                  </p>
+                )}
                 {title && <figcaption>{title}</figcaption>}
               </figure>
             )
