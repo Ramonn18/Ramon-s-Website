@@ -21,8 +21,13 @@ const BUTTON = {
   half: { scale: 0.97, y: 3 },
   pressed: { scale: 0.94, y: 6 },
 }
-// Each link leaves the button a beat after the one before it
-const STAGGER = 0.05
+// The menu ripples out from the monogram: the pair beside it (Design, About
+// me) fades in first, then the outer pair. Each link rises into place and
+// overshoots a touch, the bounce. Closing runs the ripple backwards.
+const RIPPLE = 0.08
+const RISE = 10
+const BOUNCE = { type: 'spring', stiffness: 260, damping: 11, mass: 0.8 }
+const FADE_OUT = { duration: 0.18, ease: [0.4, 0, 1, 1] }
 
 const CORNERS = ['tl', 'tr', 'bl', 'br']
 
@@ -78,23 +83,35 @@ function MetaRow({ position, collapsed, ratio, size }) {
   )
 }
 
-function NavGroup({ items, side, open, transition }) {
+function NavGroup({ items, side, open, reduceMotion }) {
+  const rings = items.length
   return (
     <ul className={`nav nav--${side}`} data-collapsed={open ? undefined : true}>
-      {items.map((item, index) => (
-        <motion.li
-          key={item.to}
-          layout
-          className="nav__item"
-          initial={false}
-          animate={{ opacity: open ? 1 : 0 }}
-          transition={{ ...transition, delay: open ? index * STAGGER : 0 }}
-        >
-          <Link className="nav__link" to={item.to} tabIndex={open ? undefined : -1}>
-            {item.label}
-          </Link>
-        </motion.li>
-      ))}
+      {items.map((item, index) => {
+        // Ring 0 sits next to the monogram; the left list runs toward it
+        const ring = side === 'left' ? rings - 1 - index : index
+        const transition = reduceMotion
+          ? INSTANT
+          : open
+            ? {
+                y: { ...BOUNCE, delay: ring * RIPPLE },
+                opacity: { duration: 0.3, ease: 'easeOut', delay: ring * RIPPLE },
+              }
+            : { ...FADE_OUT, delay: (rings - 1 - ring) * RIPPLE * 0.5 }
+        return (
+          <motion.li
+            key={item.to}
+            className="nav__item"
+            initial={false}
+            animate={{ opacity: open ? 1 : 0, y: open || reduceMotion ? 0 : RISE }}
+            transition={transition}
+          >
+            <Link className="nav__link" to={item.to} tabIndex={open ? undefined : -1}>
+              {item.label}
+            </Link>
+          </motion.li>
+        )
+      })}
     </ul>
   )
 }
@@ -159,7 +176,7 @@ export default function App() {
         <MetaRow position="bottom" collapsed={loading} ratio={ratio} size={size} />
 
         <nav className="hub" aria-label="Main">
-          <NavGroup items={NAV_LEFT} side="left" open={open} transition={transition} />
+          <NavGroup items={NAV_LEFT} side="left" open={open} reduceMotion={reduceMotion} />
 
           <motion.button
             type="button"
@@ -179,7 +196,7 @@ export default function App() {
             <img src={monogram} alt="" width="312" height="322" />
           </motion.button>
 
-          <NavGroup items={NAV_RIGHT} side="right" open={open} transition={transition} />
+          <NavGroup items={NAV_RIGHT} side="right" open={open} reduceMotion={reduceMotion} />
         </nav>
       </motion.main>
     </MotionConfig>

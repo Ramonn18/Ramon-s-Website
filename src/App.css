@@ -50,24 +50,10 @@
   margin-left: 100px;
 }
 
-/* Collapsed, every link is stacked dead center, behind the monogram, so the
-   menu opens *out of the button*. The items are absolute, which leaves this
-   list with no in-flow content — without `stretch` it shrinks to zero width
-   and `justify-self: end/start` strands it on a screen edge, so `left: 50%`
-   would resolve against nothing and the links would fly in from the sides. */
+/* Closed, the links keep their places, invisible and unclickable, so the
+   menu can ripple in where it will sit. */
 .nav[data-collapsed] {
-  position: absolute;
-  inset: 0;
-  justify-self: stretch;
-  margin: 0;
   pointer-events: none;
-}
-
-.nav[data-collapsed] .nav__item {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
 }
 
 .mark {
@@ -130,9 +116,7 @@
     gap: 8px;
   }
 
-  /* Rows are pinned rather than auto-placed: while the menu is closed both
-     lists are absolute and out of flow, which would leave the monogram as the
-     only in-flow item and drop it into row 1 — the top third of the screen. */
+  /* Nav above, monogram in the middle, nav below */
   .nav--left {
     grid-row: 1;
     align-self: end;
