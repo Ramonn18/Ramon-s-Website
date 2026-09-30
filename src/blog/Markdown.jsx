@@ -107,7 +107,7 @@ export default function Markdown({ slug, children }) {
         h1: ({ node: _node, ...props }) => <h2 {...props} />,
 
         // An image on its own line becomes a figure; its "title" is the caption.
-        // The alt text is also printed under the image as "(image: …)". Screen
+        // The alt text is also printed under the image as "image: …". Screen
         // readers already announce the alt, so the printed copy is hidden from them.
         p({ node, children: content }) {
           const kids = node.children.filter((kid) => !(kid.type === 'text' && !kid.value.trim()))
@@ -118,7 +118,7 @@ export default function Markdown({ slug, children }) {
                 <img src={assetUrl(slug, src)} alt={alt || ''} loading="lazy" />
                 {alt && (
                   <p className="entry-figure__description" aria-hidden="true">
-                    (image: {alt})
+                    image: {alt}
                   </p>
                 )}
                 {title && <figcaption>{title}</figcaption>}

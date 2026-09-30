@@ -44,7 +44,7 @@ A paragraph with **bold**, *italic*, and a [link](https://example.com).
 
 1. Make a folder named after the entry in `public/blog/`, e.g. `public/blog/user-interviews/`.
 2. Put the image there.
-3. Write the image on its own line. The text in brackets describes the image: screen readers read it aloud, and it also appears under the image as "(image: …)". The quoted text is an optional caption.
+3. Write the image on its own line. The text in brackets describes the image: screen readers read it aloud, and it also appears under the image as "image: …". The quoted text is an optional caption.
 
 ```md
 ![Paper sketches of the onboarding flow](sketches-01.jpg "First round of onboarding sketches")
