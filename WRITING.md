@@ -50,6 +50,14 @@ A paragraph with **bold**, *italic*, and a [link](https://example.com).
 ![Paper sketches of the onboarding flow](sketches-01.jpg "First round of onboarding sketches")
 ```
 
+To put an image beside a paragraph, start the image line with an arrow. `←` puts the image on the left and the next paragraph on the right; `→` swaps them. On phones the image sits above the paragraph.
+
+```md
+← ![Pencil sketches of MEEP!](img-2284.jpg)
+
+This paragraph sits to the right of the sketch.
+```
+
 ## 4. Figma prototypes and videos
 
 Use an `embed` block with the link on the first line and an optional caption on the second:

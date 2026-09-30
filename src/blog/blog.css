@@ -446,6 +446,29 @@
   background: var(--placeholder);
 }
 
+/* Image beside a paragraph: Figma's child page pairs a 438px image with 584px
+   of text (1115 − 438 − 584 = 93 gap). "←" in the Markdown puts the image left. */
+.entry-split {
+  display: grid;
+  grid-template-columns: minmax(0, 438fr) minmax(0, 584fr);
+  gap: clamp(24px, 6.46vw, 93px);
+  align-items: start;
+  margin: 40px 0;
+}
+
+.entry-split--right {
+  grid-template-columns: minmax(0, 584fr) minmax(0, 438fr);
+}
+
+.entry-split--right > .entry-figure {
+  order: 1;
+}
+
+.entry-split > .entry-figure,
+.entry-split > div > :last-child {
+  margin: 0;
+}
+
 .entry-embed {
   aspect-ratio: 16 / 9;
   border: 1px solid var(--line);
@@ -605,6 +628,17 @@
 }
 
 @media (max-width: 860px) {
+  /* Too narrow for two columns: the image sits above its paragraph */
+  .entry-split,
+  .entry-split--right {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .entry-split--right > .entry-figure {
+    order: 0;
+  }
+
   .entry-row {
     grid-template-columns: 48px minmax(0, 1fr);
     gap: 0 16px;

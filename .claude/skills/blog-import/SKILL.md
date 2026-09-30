@@ -23,6 +23,7 @@ List `blog-inbox/` recursively, skipping `README.md` and `_imported/`. Each docu
 A placeholder is a bracketed file name, like `[exampleimage.jpeg]` or `[column-map.xlsx]`, inside a box or on its own line. Match it to a file in the document's folder, ignoring case and tolerating extension variants (`.jpeg`/`.jpg`, `.heic`). A short line right under the box (or starting with "Caption:") is its caption.
 
 - **Images:** if there's no matching file but the document has an embedded picture at that spot, use the embedded picture. Look at each image and write short, factual alt text. Don't invent context.
+- **Side-by-side images:** an arrow next to the placeholder, like `← [ IMG_2284.jpg ]` or `[ IMG_2284.jpg ] →`, means the image goes to that side with the following paragraph on the other side. Write it as `← ![alt](file.jpg)` (or `→ …`) on its own line, directly followed by that paragraph.
 - **Spreadsheets** (`.xlsx`, `.csv`, `.tsv`; Google Sheets exported as .xlsx or .csv):
   - Run `node .claude/skills/blog-import/scripts/sheet-to-markdown.mjs "<file>"` and put the table at that spot.
   - For a workbook with several sheets, run `--list-sheets` first. A placeholder can name the sheet, like `[column-map.xlsx: Sheet2]`; pass that name with `--sheet "<name>"`. With no sheet named and several visible sheets, ask which ones to include.

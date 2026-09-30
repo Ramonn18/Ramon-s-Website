@@ -7,6 +7,7 @@ Drop documents here and Claude turns them into blog entries.
 3. **Put every image and spreadsheet the document mentions** in the same folder.
 4. **Mark where each one goes:** add a box (or a line) containing the exact file name in brackets.
    - Image: `[sketch-01.jpeg]`
+   - Image beside the next paragraph: `← [sketch-01.jpeg]` (image left, text right) or `→ [sketch-01.jpeg]` (image right, text left)
    - Spreadsheet or column map: `[column-map.xlsx]`, or name a specific sheet with `[column-map.xlsx: Sheet2]`
    - For a caption, write it on the line right under the box.
 5. **Ask Claude**, e.g. "import blog-inbox/user-interviews into the blog".

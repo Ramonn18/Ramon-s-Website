@@ -57,12 +57,50 @@ function Embed({ slug, url, caption }) {
   )
 }
 
+// "← ![alt](photo.jpg)" puts the image on the left and the next paragraph on
+// the right; "→" swaps the sides. The arrow can sit before or after the image.
+const SIDES = { '←': 'left', '→': 'right' }
+
+function sideOf(node) {
+  if (node?.type !== 'paragraph') return null
+  const kids = node.children.filter((kid) => !(kid.type === 'text' && !kid.value.trim()))
+  if (kids.length !== 2) return null
+  const [a, b] = kids
+  const [arrow, image] = a.type === 'image' ? [b, a] : [a, b]
+  if (image.type !== 'image' || arrow.type !== 'text') return null
+  const side = SIDES[arrow.value.trim()]
+  if (side) node.children = [image]
+  return side ?? null
+}
+
+function remarkSideBySide() {
+  return (tree) => {
+    const out = []
+    for (let i = 0; i < tree.children.length; i++) {
+      const node = tree.children[i]
+      const next = tree.children[i + 1]
+      const side = next && sideOf(node)
+      if (side) {
+        out.push({
+          type: 'sideBySide',
+          data: { hName: 'div', hProperties: { className: ['entry-split', `entry-split--${side}`] } },
+          children: [node, { type: 'sideText', data: { hName: 'div' }, children: [next] }],
+        })
+        i++
+      } else {
+        out.push(node)
+      }
+    }
+    tree.children = out
+  }
+}
+
 const textOf = (node) => node?.children?.map((child) => child.value ?? textOf(child)).join('') ?? ''
 
 export default function Markdown({ slug, children }) {
   return (
     <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
+      remarkPlugins={[remarkGfm, remarkSideBySide]}
       skipHtml
       components={{
         // The entry title is the page's only h1
