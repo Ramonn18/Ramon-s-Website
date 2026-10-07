@@ -61,14 +61,6 @@
   right: var(--gutter);
 }
 
-/* Home screen only: the four crosshairs stack into one during the intro */
-.crosshair[data-collapsed] {
-  top: calc(50% - var(--crosshair-size) / 2);
-  right: auto;
-  bottom: auto;
-  left: calc(50% - var(--crosshair-size) / 2);
-}
-
 /* ---------- Edge labels (10px, at x 99 / y 61) ---------- */
 /* The bottom row is the top row rotated 180°, so the start label lands
    bottom-right and the end label bottom-left — as drawn in Figma. */
@@ -111,13 +103,6 @@
   display: flex;
   gap: 60px;
   justify-self: end;
-}
-
-.meta[data-collapsed] {
-  top: calc(50% - 5px);
-  right: calc(50% - 60px);
-  bottom: auto;
-  left: calc(50% - 60px);
 }
 
 /* ---------- Nav button (Figma "Buttons": Default / Variant2 on hover) ---------- */

@@ -65,20 +65,18 @@ function useViewportLabels() {
 function MetaRow({ position, collapsed, ratio, size }) {
   return (
     <motion.p
-      layout
       className={`meta meta--${position}`}
-      data-collapsed={collapsed || undefined}
       style={position === 'bottom' ? { rotate: 180 } : undefined}
       initial={false}
       animate={{ opacity: collapsed ? 0 : 1 }}
       aria-hidden="true"
     >
-      <motion.span layout className="meta__start">RAMON NOIR</motion.span>
-      <motion.span layout>WEB PAGE</motion.span>
-      <motion.span layout className="meta__end">
+      <span className="meta__start">RAMON NOIR</span>
+      <span>WEB PAGE</span>
+      <span className="meta__end">
         <span>{ratio}</span>
         <span>{size}</span>
-      </motion.span>
+      </span>
     </motion.p>
   )
 }
@@ -160,12 +158,11 @@ export default function App() {
           animate={{ opacity: loading ? 1 : 0 }}
         />
 
+        {/* The sheet marks stay at the edges and fade in once loading ends */}
         {CORNERS.map((corner) => (
           <motion.span
             key={corner}
-            layout
             className={`crosshair crosshair--${corner}`}
-            data-collapsed={loading || undefined}
             initial={false}
             animate={{ opacity: loading ? 0 : 1 }}
             aria-hidden="true"
