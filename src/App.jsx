@@ -12,7 +12,7 @@ const INTRO = { duration: 0.6, ease: [0, 0, 0.58, 1] }
 const REVEAL = { type: 'spring', mass: 1, stiffness: 80, damping: 20 }
 const INSTANT = { duration: 0 }
 // The sheet marks wait for the dark background to clear before fading in
-const EDGE_DELAY = 0.5
+const EDGE_DELAY = 0.3
 
 // A button's travel: quick and firm, not the springy curve the menu uses.
 const PRESS = { type: 'spring', stiffness: 420, damping: 32 }
