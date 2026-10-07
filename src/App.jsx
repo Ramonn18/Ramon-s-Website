@@ -11,6 +11,8 @@ const LOADING_MS = 1850
 const INTRO = { duration: 0.6, ease: [0, 0, 0.58, 1] }
 const REVEAL = { type: 'spring', mass: 1, stiffness: 80, damping: 20 }
 const INSTANT = { duration: 0 }
+// The sheet marks wait for the dark background to clear before fading in
+const EDGE_DELAY = 0.5
 
 // A button's travel: quick and firm, not the springy curve the menu uses.
 const PRESS = { type: 'spring', stiffness: 420, damping: 32 }
@@ -62,13 +64,14 @@ function useViewportLabels() {
   }
 }
 
-function MetaRow({ position, collapsed, ratio, size }) {
+function MetaRow({ position, collapsed, ratio, size, transition }) {
   return (
     <motion.p
       className={`meta meta--${position}`}
       style={position === 'bottom' ? { rotate: 180 } : undefined}
       initial={false}
       animate={{ opacity: collapsed ? 0 : 1 }}
+      transition={transition}
       aria-hidden="true"
     >
       <span className="meta__start">RAMON NOIR</span>
@@ -136,6 +139,7 @@ export default function App() {
   const loading = phase === 'loading'
   const open = phase === 'open'
   const transition = reduceMotion ? INSTANT : hasToggled ? REVEAL : INTRO
+  const edgeFade = reduceMotion ? INSTANT : { ...INTRO, delay: EDGE_DELAY }
 
   const toggleNav = () => {
     setHasToggled(true)
@@ -165,12 +169,13 @@ export default function App() {
             className={`crosshair crosshair--${corner}`}
             initial={false}
             animate={{ opacity: loading ? 0 : 1 }}
+            transition={edgeFade}
             aria-hidden="true"
           />
         ))}
 
-        <MetaRow position="top" collapsed={loading} ratio={ratio} size={size} />
-        <MetaRow position="bottom" collapsed={loading} ratio={ratio} size={size} />
+        <MetaRow position="top" collapsed={loading} ratio={ratio} size={size} transition={edgeFade} />
+        <MetaRow position="bottom" collapsed={loading} ratio={ratio} size={size} transition={edgeFade} />
 
         <nav className="hub" aria-label="Main">
           <NavGroup items={NAV_LEFT} side="left" open={open} reduceMotion={reduceMotion} />
